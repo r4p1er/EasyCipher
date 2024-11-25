@@ -5,14 +5,17 @@ import java.awt.*;
 import java.io.InputStream;
 
 public class Main {
-    private final static int INITIAL_WIDTH = 600;
-    private final static int INITIAL_HEIGHT = 600;
+    private final static Dimension INITIAL_DIMENSION = new Dimension(600, 600);
+    private final static Dimension MINIMUM_DIMENSION = new Dimension(550, 450);
+    private final static Color BACKGROUND_COLOR = new Color(31, 31,31 );
 
     public static void main(String[] args) {
         maybeLoadFonts();
         SwingUtilities.invokeLater(() -> {
             var mainWindow = new MainWindow();
-            mainWindow.setBounds(0, 0, INITIAL_WIDTH, INITIAL_HEIGHT);
+            mainWindow.setSize(INITIAL_DIMENSION);
+            mainWindow.setMinimumSize(MINIMUM_DIMENSION);
+            mainWindow.setBackground(BACKGROUND_COLOR);
             mainWindow.setLocationRelativeTo(null);
             mainWindow.setVisible(true);
         });

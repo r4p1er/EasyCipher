@@ -9,6 +9,7 @@
       <background color="-14737633"/>
       <focusCycleRoot value="false"/>
       <foreground color="-1"/>
+      <opaque value="false"/>
     </properties>
     <border type="none"/>
     <children>
@@ -28,6 +29,7 @@
           <font size="24" style="1"/>
           <foreground color="-3255425"/>
           <inheritsPopupMenu value="false"/>
+          <opaque value="false"/>
           <selectedTextColor color="-8881022"/>
           <selectionColor color="-8881022"/>
           <text value="Encrypt your files with EasyCipher"/>
