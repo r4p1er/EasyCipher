@@ -17,7 +17,7 @@ public class MainFrame extends JFrame {
     }
 
     public void navigate(@NotNull Route destinationRoute) {
-        setTitle(destinationRoute.getName());
+        setTitle(destinationRoute.getTitle());
         setContentPane(destinationRoute.getContentPane());
         revalidate();
     }

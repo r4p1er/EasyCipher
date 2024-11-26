@@ -3,14 +3,14 @@ package ru.obninsk.iate.easycipher.routes;
 import javax.swing.*;
 
 public abstract class Route {
-    private final String name;
+    private final String title;
 
-    public Route(String name) {
-        this.name = name;
+    public Route(String title) {
+        this.title = title;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public abstract JPanel getContentPane();
