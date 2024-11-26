@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
-public class StartRoute {
+public class StartRoute extends Route {
     private JPanel contentPane;
     private JTextPane titleTextPane;
     private JPanel chooserPanel;
@@ -14,9 +14,11 @@ public class StartRoute {
     private File selectedFile;
 
     public StartRoute() {
+    super("EasyCipher");
         chooserPanelButton.addActionListener(this::handleChooserPanelButtonAction);
     }
 
+    @Override
     public JPanel getContentPane() {
         return contentPane;
     }
