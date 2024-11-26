@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         maybeLoadFonts();
         SwingUtilities.invokeLater(() -> {
-            var mainFrame = new MainFrame();
+            var mainFrame = MainFrame.getInstance();
             mainFrame.setSize(INITIAL_DIMENSION);
             mainFrame.setMinimumSize(MINIMUM_DIMENSION);
             mainFrame.setBackground(BACKGROUND_COLOR);

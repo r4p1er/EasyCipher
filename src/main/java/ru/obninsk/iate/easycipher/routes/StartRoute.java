@@ -1,5 +1,6 @@
-package ru.obninsk.iate.easycipher;
+package ru.obninsk.iate.easycipher.routes;
 
+import ru.obninsk.iate.easycipher.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -10,8 +11,6 @@ public class StartRoute extends Route {
     private JPanel chooserPanel;
     private JLabel chooserPanelLabel;
     private JButton chooserPanelButton;
-
-    private File selectedFile;
 
     public StartRoute() {
     super("EasyCipher");
@@ -28,6 +27,8 @@ public class StartRoute extends Route {
         int result = fileChooser.showOpenDialog(contentPane);
         if (result != JFileChooser.APPROVE_OPTION) return;
 
-        selectedFile = fileChooser.getSelectedFile();
+        File selectedFile = fileChooser.getSelectedFile();
+        var encryptRoute = new EncryptRoute(selectedFile);
+        MainFrame.getInstance().navigate(encryptRoute);
     }
 }

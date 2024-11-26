@@ -1,4 +1,4 @@
-package ru.obninsk.iate.easycipher;
+package ru.obninsk.iate.easycipher.routes;
 
 import javax.swing.*;
 
