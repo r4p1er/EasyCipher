@@ -12,12 +12,12 @@ public class Main {
     public static void main(String[] args) {
         maybeLoadFonts();
         SwingUtilities.invokeLater(() -> {
-            var mainWindow = new MainWindow();
-            mainWindow.setSize(INITIAL_DIMENSION);
-            mainWindow.setMinimumSize(MINIMUM_DIMENSION);
-            mainWindow.setBackground(BACKGROUND_COLOR);
-            mainWindow.setLocationRelativeTo(null);
-            mainWindow.setVisible(true);
+            var mainFrame = new MainFrame();
+            mainFrame.setSize(INITIAL_DIMENSION);
+            mainFrame.setMinimumSize(MINIMUM_DIMENSION);
+            mainFrame.setBackground(BACKGROUND_COLOR);
+            mainFrame.setLocationRelativeTo(null);
+            mainFrame.setVisible(true);
         });
     }
 
