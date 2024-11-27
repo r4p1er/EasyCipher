@@ -20,6 +20,7 @@
         </constraints>
         <properties>
           <focusable value="false"/>
+          <horizontalScrollBarPolicy value="31"/>
           <opaque value="false"/>
           <requestFocusEnabled value="false"/>
         </properties>

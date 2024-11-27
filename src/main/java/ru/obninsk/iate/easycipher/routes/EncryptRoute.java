@@ -1,6 +1,6 @@
 package ru.obninsk.iate.easycipher.routes;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.*;
 import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.lib.Algorithm;
 import javax.swing.*;
@@ -37,7 +37,7 @@ public class EncryptRoute extends Route {
     public EncryptRoute(@NotNull File targetItem) {
         super("EasyCipher - " + targetItem.getName());
         this.targetItem = targetItem;
-        renderOpenedItemLabelPanel();
+        renderOpenedItemPanelLabel();
         algorithmPanelDescription.setText(ALGORITHM_DESCRIPTIONS[0]);
         SwingUtilities.invokeLater(() -> algorithmPanelDescription.revalidate());
         algorithmPanelComboBox.addActionListener(this::handleAlgorithmPanelComboBoxAction);
@@ -51,7 +51,7 @@ public class EncryptRoute extends Route {
         return contentPane;
     }
 
-    private void renderOpenedItemLabelPanel() {
+    private void renderOpenedItemPanelLabel() {
         openedItemPanelLabel.setText(targetItem.getName());
         String iconAssetPath = targetItem.isDirectory()
                 ? "/icons/opened-directory-icon.png"
@@ -63,7 +63,7 @@ public class EncryptRoute extends Route {
             var icon = new ImageIcon(iconStream);
             openedItemPanelLabel.setIcon(icon);
         } catch (Exception e) {
-            System.err.println("Error occurred while loading icon");
+            System.err.println("Error occurred while loading '" + iconAssetPath + "' icon");
         }
     }
 
@@ -87,7 +87,9 @@ public class EncryptRoute extends Route {
     }
 
     private void handleEncryptButtonAction(ActionEvent event) {
-        MainFrame.getInstance().navigate(new StartRoute());
+        var mainFrame = MainFrame.getInstance();
+        mainFrame.addItemToRecentlyEncrypted(targetItem);
+        mainFrame.navigate(new StartRoute());
     }
 
     private void handleCancelButtonAction(ActionEvent event) {
