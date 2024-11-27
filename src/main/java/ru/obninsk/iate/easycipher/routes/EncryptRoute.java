@@ -2,13 +2,15 @@ package ru.obninsk.iate.easycipher.routes;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.InputStream;
 import java.net.URL;
 
 public class EncryptRoute extends Route {
     private JPanel contentPane;
     private JPanel openedItemPanel;
     private JLabel openedItemPanelLabel;
+    private JPanel algorithmPanel;
+    private JComboBox algorithmPanelComboBox;
+    private JLabel algorithmPanelLabel;
     private final File targetItem;
 
     public EncryptRoute(File targetItem) {
@@ -34,7 +36,7 @@ public class EncryptRoute extends Route {
             var icon = new ImageIcon(iconStream);
             openedItemPanelLabel.setIcon(icon);
         } catch (Exception e) {
-            System.out.println("Error occurred while loading icon");
+            System.err.println("Error occurred while loading icon");
         }
     }
 }
