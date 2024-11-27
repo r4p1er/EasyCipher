@@ -7,13 +7,15 @@ import java.io.File;
 
 public class StartRoute extends Route {
     private JPanel contentPane;
+    private JScrollPane contentScrollPane;
+    private JPanel contentPaneInner;
     private JTextPane titleTextPane;
     private JPanel chooserPanel;
     private JLabel chooserPanelLabel;
     private JButton chooserPanelButton;
 
     public StartRoute() {
-    super("EasyCipher");
+        super("EasyCipher");
         chooserPanelButton.addActionListener(this::handleChooserPanelButtonAction);
     }
 

@@ -10,6 +10,7 @@ import java.net.URL;
 
 public class EncryptRoute extends Route {
     private JPanel contentPane;
+    private JScrollPane contentScrollPane;
     private JPanel contentPaneInner;
     private JPanel openedItemPanel;
     private JLabel openedItemPanelLabel;
@@ -22,6 +23,7 @@ public class EncryptRoute extends Route {
     private JTextField keygenPanelTextField;
     private JButton keygenPanelGenerateButton;
     private JButton encryptButton;
+    private JButton cancelButton;
 
     private final File targetItem;
     private Algorithm selectedAlgorithm = Algorithm.AES;
@@ -37,9 +39,11 @@ public class EncryptRoute extends Route {
         this.targetItem = targetItem;
         renderOpenedItemLabelPanel();
         algorithmPanelDescription.setText(ALGORITHM_DESCRIPTIONS[0]);
+        SwingUtilities.invokeLater(() -> algorithmPanelDescription.revalidate());
         algorithmPanelComboBox.addActionListener(this::handleAlgorithmPanelComboBoxAction);
         keygenPanelGenerateButton.addActionListener(this::handleKeygenPanelGenerateButtonAction);
         encryptButton.addActionListener(this::handleEncryptButtonAction);
+        cancelButton.addActionListener(this::handleCancelButtonAction);
     }
 
     @Override
@@ -83,6 +87,10 @@ public class EncryptRoute extends Route {
     }
 
     private void handleEncryptButtonAction(ActionEvent event) {
+        MainFrame.getInstance().navigate(new StartRoute());
+    }
+
+    private void handleCancelButtonAction(ActionEvent event) {
         MainFrame.getInstance().navigate(new StartRoute());
     }
 }
