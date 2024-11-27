@@ -1,5 +1,7 @@
 package ru.obninsk.iate.easycipher.routes;
 
+import org.jetbrains.annotations.NotNull;
+import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.lib.Algorithm;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +16,11 @@ public class EncryptRoute extends Route {
     private JLabel algorithmPanelLabel;
     private JComboBox<String> algorithmPanelComboBox;
     private JTextPane algorithmPanelDescription;
+    private JPanel keygenPanel;
+    private JLabel keygenPanelLabel;
+    private JTextField keygenPanelTextField;
+    private JButton keygenPanelGenerateButton;
+    private JButton encryptButton;
 
     private final File targetItem;
     private Algorithm selectedAlgorithm = Algorithm.AES;
@@ -24,11 +31,14 @@ public class EncryptRoute extends Route {
             "Twofish Description, Twofish Description, Twofish Description, Twofish Description.",
     };
 
-    public EncryptRoute(File targetItem) {
+    public EncryptRoute(@NotNull File targetItem) {
         super("EasyCipher - " + targetItem.getName());
         this.targetItem = targetItem;
         renderOpenedItemLabelPanel();
+        algorithmPanelDescription.setText(ALGORITHM_DESCRIPTIONS[0]);
         algorithmPanelComboBox.addActionListener(this::handleAlgorithmPanelComboBoxAction);
+        keygenPanelGenerateButton.addActionListener(this::handleKeygenPanelGenerateButtonAction);
+        encryptButton.addActionListener(this::handleEncryptButtonAction);
     }
 
     @Override
@@ -65,5 +75,13 @@ public class EncryptRoute extends Route {
 
         algorithmPanelDescription.setText(ALGORITHM_DESCRIPTIONS[selectedIndex]);
         SwingUtilities.invokeLater(() -> algorithmPanelDescription.revalidate());
+    }
+
+    private void handleKeygenPanelGenerateButtonAction(ActionEvent event) {
+        keygenPanelTextField.setText("Very secure and, of course, random key");
+    }
+
+    private void handleEncryptButtonAction(ActionEvent event) {
+        MainFrame.getInstance().navigate(new StartRoute());
     }
 }
