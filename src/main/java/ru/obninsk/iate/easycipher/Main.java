@@ -22,17 +22,16 @@ public class Main {
     }
 
     private static void maybeLoadFonts() {
-        InputStream monospaceFontStream =
-                Main.class.getResourceAsStream("/fonts/jetbrains-mono-font.ttf");
-
-        try {
+        try (InputStream monospaceFontStream = Main.class.getResourceAsStream(
+                "/fonts/jetbrains-mono-font.ttf"
+        )) {
             if (monospaceFontStream == null) throw new Exception();
             var monospaceFont = Font.createFont(Font.TRUETYPE_FONT, monospaceFontStream);
             UIManager.put("Label.font", monospaceFont.deriveFont(Font.PLAIN, 14));
             UIManager.put("TextPane.font", monospaceFont.deriveFont(Font.PLAIN, 14));
             UIManager.put("Button.font", monospaceFont.deriveFont(Font.PLAIN, 14));
         } catch (Exception e) {
-            System.out.println("Error occurred while loading fonts");
+            System.out.println("Error occurred while loading font");
         }
     }
 }

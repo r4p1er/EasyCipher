@@ -62,7 +62,7 @@
             <properties>
               <font/>
               <foreground color="-3360830"/>
-              <text value="Choose or drop the file here to get started"/>
+              <text value="Choose a file or directory to get started"/>
             </properties>
           </component>
           <vspacer id="9122e">
@@ -95,7 +95,7 @@
               <contentAreaFilled value="true"/>
               <focusPainted value="false"/>
               <foreground color="-1"/>
-              <text value="Choose the file..."/>
+              <text value="Choose an item..."/>
             </properties>
           </component>
         </children>

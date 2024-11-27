@@ -24,11 +24,14 @@ public class StartRoute extends Route {
 
     private void handleChooserPanelButtonAction(ActionEvent event) {
         var fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fileChooser.setDialogTitle("Choose a file or directory to encrypt");
+        fileChooser.setApproveButtonText("Choose");
         int result = fileChooser.showOpenDialog(contentPane);
         if (result != JFileChooser.APPROVE_OPTION) return;
 
-        File selectedFile = fileChooser.getSelectedFile();
-        var encryptRoute = new EncryptRoute(selectedFile);
+        File selectedItem = fileChooser.getSelectedFile();
+        var encryptRoute = new EncryptRoute(selectedItem);
         MainFrame.getInstance().navigate(encryptRoute);
     }
 }
