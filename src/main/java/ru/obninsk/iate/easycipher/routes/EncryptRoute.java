@@ -10,6 +10,7 @@ import java.net.URL;
 
 public class EncryptRoute extends Route {
     private JPanel contentPane;
+    private JPanel contentPaneInner;
     private JPanel openedItemPanel;
     private JLabel openedItemPanelLabel;
     private JPanel algorithmPanel;
