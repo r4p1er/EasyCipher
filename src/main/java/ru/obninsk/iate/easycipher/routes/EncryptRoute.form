@@ -87,7 +87,7 @@
                     <properties>
                       <editable value="false"/>
                       <enabled value="true"/>
-                      <focusCycleRoot value="true"/>
+                      <focusCycleRoot value="false"/>
                       <focusTraversalPolicyProvider value="false"/>
                       <focusable value="true"/>
                       <opaque value="true"/>
@@ -103,7 +103,10 @@
                     </constraints>
                     <properties>
                       <editable value="false"/>
+                      <focusCycleRoot value="false"/>
+                      <focusable value="false"/>
                       <opaque value="false"/>
+                      <requestFocusEnabled value="false"/>
                       <text value=""/>
                     </properties>
                   </component>
