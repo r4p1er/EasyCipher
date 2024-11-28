@@ -1,8 +1,11 @@
 package ru.obninsk.iate.easycipher.components;
 
 import org.jetbrains.annotations.*;
+import ru.obninsk.iate.easycipher.MainFrame;
+import ru.obninsk.iate.easycipher.routes.DecryptRoute;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.net.URL;
 
@@ -12,6 +15,7 @@ public class RecentItemButton extends JButton {
     public RecentItemButton(@NotNull File item) {
         this.item = item;
         render();
+        addActionListener(this::handleAction);
     }
 
     private void render() {
@@ -30,5 +34,9 @@ public class RecentItemButton extends JButton {
         } catch (Exception e) {
             System.err.println("Error occurred while loading '" + iconAssetPath + "' icon");
         }
+    }
+
+    private void handleAction(ActionEvent event) {
+        MainFrame.getInstance().navigate(new DecryptRoute(item));
     }
 }

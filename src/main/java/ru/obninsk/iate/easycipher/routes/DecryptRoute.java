@@ -6,9 +6,10 @@ import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
 import ru.obninsk.iate.easycipher.lib.Algorithm;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
 import java.io.File;
 
-public class EncryptRoute extends Route {
+public class DecryptRoute extends Route {
     private JPanel contentPane;
     private JScrollPane contentScrollPane;
     private JPanel contentPaneInner;
@@ -17,32 +18,25 @@ public class EncryptRoute extends Route {
     private JPanel algorithmPanel;
     private JLabel algorithmPanelLabel;
     private JComboBox<String> algorithmPanelComboBox;
-    private JTextPane algorithmPanelDescription;
-    private JPanel keygenPanel;
-    private JLabel keygenPanelLabel;
-    private JTextField keygenPanelTextField;
-    private JButton keygenPanelGenerateButton;
-    private JButton encryptButton;
+    private JCheckBox algorithmPanelAutoCheckBox;
+    private JPanel keyPanel;
+    private JLabel keyPanelLabel;
+    private JTextField keyPanelTextField;
+    private JButton decryptButton;
     private JButton cancelButton;
 
     private final File targetItem;
     private Algorithm selectedAlgorithm = Algorithm.AES;
+    private Boolean autoAlgorithmDetection = false;
     private static final String[] ALGORITHM_OPTIONS = { "AES", "Blowfish", "Twofish" };
-    private static final String[] ALGORITHM_DESCRIPTIONS = {
-            "AES Description, AES Description, AES Description, AES Description, AES Description.",
-            "Blowfish Description, Blowfish Description, Blowfish Description, Blowfish Description.",
-            "Twofish Description, Twofish Description, Twofish Description, Twofish Description.",
-    };
 
-    public EncryptRoute(@NotNull File targetItem) {
+    public DecryptRoute(@NotNull File targetItem) {
         super("EasyCipher - " + targetItem.getName());
         this.targetItem = targetItem;
         openedItemPanelInner.add(new OpenedItemLabel(targetItem));
-        algorithmPanelDescription.setText(ALGORITHM_DESCRIPTIONS[0]);
-        SwingUtilities.invokeLater(() -> algorithmPanelDescription.revalidate());
         algorithmPanelComboBox.addActionListener(this::handleAlgorithmPanelComboBoxAction);
-        keygenPanelGenerateButton.addActionListener(this::handleKeygenPanelGenerateButtonAction);
-        encryptButton.addActionListener(this::handleEncryptButtonAction);
+        algorithmPanelAutoCheckBox.addItemListener(this::handleAlgorithmPanelAutoCheckBoxChange);
+        decryptButton.addActionListener(this::handleEncryptButtonAction);
         cancelButton.addActionListener(this::handleCancelButtonAction);
     }
 
@@ -63,19 +57,20 @@ public class EncryptRoute extends Route {
         if (selectedIndex == 0) selectedAlgorithm = Algorithm.AES;
         else if (selectedIndex == 1) selectedAlgorithm = Algorithm.BLOWFISH;
         else selectedAlgorithm = Algorithm.TWOFISH;
-
-        algorithmPanelDescription.setText(ALGORITHM_DESCRIPTIONS[selectedIndex]);
-        SwingUtilities.invokeLater(() -> algorithmPanelDescription.revalidate());
     }
 
-    private void handleKeygenPanelGenerateButtonAction(ActionEvent event) {
-        keygenPanelTextField.setText("Very secure and, of course, random key");
+    private void handleAlgorithmPanelAutoCheckBoxChange(@NotNull ItemEvent event) {
+        if (event.getStateChange() == ItemEvent.SELECTED) {
+            autoAlgorithmDetection = true;
+            algorithmPanelComboBox.setEnabled(false);
+        } else {
+            autoAlgorithmDetection = false;
+            algorithmPanelComboBox.setEnabled(true);
+        }
     }
 
     private void handleEncryptButtonAction(ActionEvent event) {
-        var mainFrame = MainFrame.getInstance();
-        mainFrame.addItemToRecentlyEncrypted(targetItem);
-        mainFrame.navigate(new StartRoute());
+        MainFrame.getInstance().navigate(new StartRoute());
     }
 
     private void handleCancelButtonAction(ActionEvent event) {

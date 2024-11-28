@@ -1,7 +1,6 @@
 package ru.obninsk.iate.easycipher.components;
 
-import org.jetbrains.annotations.NotNull;
-
+import org.jetbrains.annotations.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
