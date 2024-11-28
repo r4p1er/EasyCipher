@@ -26,217 +26,231 @@
         </properties>
         <border type="empty"/>
         <children>
-          <grid id="8f8b5" binding="contentPaneInner" layout-manager="GridLayoutManager" row-count="10" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="10" left="20" bottom="10" right="20"/>
+          <grid id="a04c6" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
             <constraints/>
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="17d5" binding="openedItemPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="30" bottom="0" right="30"/>
+              <grid id="8f8b5" binding="contentPaneInner" layout-manager="GridLayoutManager" row-count="10" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="10" left="20" bottom="10" right="20"/>
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <background color="-14407633"/>
-                </properties>
-                <border type="line">
-                  <color color="-3255425"/>
-                </border>
-                <children>
-                  <grid id="42da2" binding="openedItemPanelInner" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="false"/>
-                    </properties>
-                    <border type="none"/>
-                    <children/>
-                  </grid>
-                </children>
-              </grid>
-              <vspacer id="501a5">
-                <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                    <preferred-size width="-1" height="10"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <maximum-size width="800" height="-1"/>
                   </grid>
                 </constraints>
-              </vspacer>
-              <grid id="cd28d" binding="algorithmPanel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="15" left="40" bottom="15" right="40"/>
-                <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                </constraints>
                 <properties>
-                  <background color="-14407633"/>
-                  <foreground color="-3255425"/>
+                  <maximumSize width="800" height="2147483647"/>
                 </properties>
-                <border type="line">
-                  <color color="-3255425"/>
-                </border>
+                <border type="none"/>
                 <children>
-                  <component id="b9051" class="javax.swing.JComboBox" binding="algorithmPanelComboBox" custom-create="true">
+                  <grid id="17d5" binding="openedItemPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="30" bottom="0" right="30"/>
                     <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <editable value="false"/>
-                      <enabled value="true"/>
-                      <focusCycleRoot value="false"/>
-                      <focusTraversalPolicyProvider value="false"/>
-                      <focusable value="true"/>
-                      <opaque value="true"/>
-                      <popupVisible value="false"/>
-                      <requestFocusEnabled value="true"/>
+                      <background color="-14407633"/>
                     </properties>
-                  </component>
-                  <component id="4e54d" class="javax.swing.JTextPane" binding="algorithmPanelDescription">
-                    <constraints>
-                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="0"/>
+                    <border type="line">
+                      <color color="-3255425"/>
+                    </border>
+                    <children>
+                      <grid id="42da2" binding="openedItemPanelInner" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                        </properties>
+                        <border type="none"/>
+                        <children/>
                       </grid>
-                    </constraints>
-                    <properties>
-                      <editable value="false"/>
-                      <focusCycleRoot value="false"/>
-                      <focusable value="false"/>
-                      <opaque value="false"/>
-                      <requestFocusEnabled value="false"/>
-                      <text value=""/>
-                    </properties>
-                  </component>
-                  <vspacer id="38e78">
+                    </children>
+                  </grid>
+                  <vspacer id="501a5">
                     <constraints>
-                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                        <preferred-size width="-1" height="5"/>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+                        <preferred-size width="-1" height="10"/>
                       </grid>
                     </constraints>
                   </vspacer>
-                  <component id="c1577" class="javax.swing.JLabel" binding="algorithmPanelLabel">
+                  <grid id="cd28d" binding="algorithmPanel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="15" left="40" bottom="15" right="40"/>
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                        <preferred-size width="180" height="30"/>
-                      </grid>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <font/>
-                      <horizontalAlignment value="4"/>
-                      <iconTextGap value="12"/>
-                      <inheritsPopupMenu value="true"/>
-                      <labelFor value="b9051"/>
-                      <text value="Encryption algorithm"/>
+                      <background color="-14407633"/>
+                      <foreground color="-3255425"/>
                     </properties>
-                  </component>
-                </children>
-              </grid>
-              <vspacer id="d01c0">
-                <constraints>
-                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                    <preferred-size width="-1" height="10"/>
+                    <border type="line">
+                      <color color="-3255425"/>
+                    </border>
+                    <children>
+                      <component id="b9051" class="javax.swing.JComboBox" binding="algorithmPanelComboBox" custom-create="true">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <editable value="false"/>
+                          <enabled value="true"/>
+                          <focusCycleRoot value="false"/>
+                          <focusTraversalPolicyProvider value="false"/>
+                          <focusable value="true"/>
+                          <opaque value="true"/>
+                          <popupVisible value="false"/>
+                          <requestFocusEnabled value="true"/>
+                        </properties>
+                      </component>
+                      <component id="4e54d" class="javax.swing.JTextPane" binding="algorithmPanelDescription">
+                        <constraints>
+                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="0"/>
+                          </grid>
+                        </constraints>
+                        <properties>
+                          <editable value="false"/>
+                          <focusCycleRoot value="false"/>
+                          <focusable value="false"/>
+                          <opaque value="false"/>
+                          <requestFocusEnabled value="false"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <vspacer id="38e78">
+                        <constraints>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+                            <preferred-size width="-1" height="5"/>
+                          </grid>
+                        </constraints>
+                      </vspacer>
+                      <component id="c1577" class="javax.swing.JLabel" binding="algorithmPanelLabel">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                            <preferred-size width="180" height="30"/>
+                          </grid>
+                        </constraints>
+                        <properties>
+                          <font/>
+                          <horizontalAlignment value="4"/>
+                          <iconTextGap value="12"/>
+                          <inheritsPopupMenu value="true"/>
+                          <labelFor value="b9051"/>
+                          <text value="Encryption algorithm"/>
+                        </properties>
+                      </component>
+                    </children>
                   </grid>
-                </constraints>
-              </vspacer>
-              <grid id="72874" binding="keygenPanel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="15" left="40" bottom="15" right="40"/>
-                <constraints>
-                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <background color="-14407633"/>
-                  <foreground color="-3255425"/>
-                </properties>
-                <border type="line">
-                  <color color="-3255425"/>
-                </border>
-                <children>
-                  <vspacer id="a365b">
+                  <vspacer id="d01c0">
                     <constraints>
-                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                        <preferred-size width="-1" height="5"/>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+                        <preferred-size width="-1" height="10"/>
                       </grid>
                     </constraints>
                   </vspacer>
-                  <component id="b794f" class="javax.swing.JTextField" binding="keygenPanelTextField">
+                  <grid id="72874" binding="keygenPanel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="15" left="40" bottom="15" right="40"/>
                     <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="-1"/>
+                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <background color="-14407633"/>
+                      <foreground color="-3255425"/>
+                    </properties>
+                    <border type="line">
+                      <color color="-3255425"/>
+                    </border>
+                    <children>
+                      <vspacer id="a365b">
+                        <constraints>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+                            <preferred-size width="-1" height="5"/>
+                          </grid>
+                        </constraints>
+                      </vspacer>
+                      <component id="b794f" class="javax.swing.JTextField" binding="keygenPanelTextField">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                        </constraints>
+                        <properties>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="c25c7" class="javax.swing.JLabel" binding="keygenPanelLabel">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                            <preferred-size width="180" height="30"/>
+                          </grid>
+                        </constraints>
+                        <properties>
+                          <font/>
+                          <horizontalAlignment value="4"/>
+                          <horizontalTextPosition value="11"/>
+                          <iconTextGap value="12"/>
+                          <inheritsPopupMenu value="true"/>
+                          <labelFor value="b9051"/>
+                          <text value="Encryption key"/>
+                        </properties>
+                      </component>
+                      <component id="9c70b" class="javax.swing.JButton" binding="keygenPanelGenerateButton">
+                        <constraints>
+                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Generate random key"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <vspacer id="3d3ae">
+                    <constraints>
+                      <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+                        <preferred-size width="-1" height="10"/>
+                      </grid>
+                    </constraints>
+                  </vspacer>
+                  <vspacer id="80072">
+                    <constraints>
+                      <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </vspacer>
+                  <component id="8aa42" class="javax.swing.JButton" binding="encryptButton">
+                    <constraints>
+                      <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="-1" height="50"/>
                       </grid>
                     </constraints>
                     <properties>
-                      <text value=""/>
+                      <background color="-3255425"/>
+                      <borderPainted value="true"/>
+                      <foreground color="-1"/>
+                      <text value="Encrypt item"/>
                     </properties>
                   </component>
-                  <component id="c25c7" class="javax.swing.JLabel" binding="keygenPanelLabel">
+                  <component id="d707a" class="javax.swing.JButton" binding="cancelButton">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                        <preferred-size width="180" height="30"/>
+                      <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="-1" height="50"/>
                       </grid>
                     </constraints>
                     <properties>
-                      <font/>
-                      <horizontalAlignment value="4"/>
-                      <horizontalTextPosition value="11"/>
-                      <iconTextGap value="12"/>
-                      <inheritsPopupMenu value="true"/>
-                      <labelFor value="b9051"/>
-                      <text value="Encryption key"/>
+                      <borderPainted value="true"/>
+                      <text value="Cancel"/>
                     </properties>
                   </component>
-                  <component id="9c70b" class="javax.swing.JButton" binding="keygenPanelGenerateButton">
+                  <vspacer id="e14ed">
                     <constraints>
-                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+                        <preferred-size width="-1" height="2"/>
+                      </grid>
                     </constraints>
-                    <properties>
-                      <text value="Generate random key"/>
-                    </properties>
-                  </component>
+                  </vspacer>
                 </children>
               </grid>
-              <vspacer id="3d3ae">
-                <constraints>
-                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                    <preferred-size width="-1" height="10"/>
-                  </grid>
-                </constraints>
-              </vspacer>
-              <vspacer id="80072">
-                <constraints>
-                  <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </vspacer>
-              <component id="8aa42" class="javax.swing.JButton" binding="encryptButton">
-                <constraints>
-                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="-1" height="50"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <background color="-3255425"/>
-                  <borderPainted value="true"/>
-                  <foreground color="-1"/>
-                  <text value="Encrypt item"/>
-                </properties>
-              </component>
-              <component id="d707a" class="javax.swing.JButton" binding="cancelButton">
-                <constraints>
-                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="-1" height="50"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <borderPainted value="true"/>
-                  <text value="Cancel"/>
-                </properties>
-              </component>
-              <vspacer id="e14ed">
-                <constraints>
-                  <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                    <preferred-size width="-1" height="2"/>
-                  </grid>
-                </constraints>
-              </vspacer>
             </children>
           </grid>
         </children>
