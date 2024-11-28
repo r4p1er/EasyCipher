@@ -78,7 +78,7 @@
                     </constraints>
                     <properties>
                       <font/>
-                      <text value="Choose a file or directory to get started"/>
+                      <text value="Choose a file or directory to encrypt"/>
                     </properties>
                   </component>
                   <vspacer id="9122e">

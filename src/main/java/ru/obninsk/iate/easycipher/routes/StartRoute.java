@@ -43,7 +43,11 @@ public class StartRoute extends Route {
     private void renderRecentItemsPanel() {
         var recentItems = MainFrame.getInstance().getRecentItems();
 
-        for (File item : recentItems) {
+        if (recentItems.isEmpty()) {
+            var label = new JLabel("No recent items", SwingConstants.CENTER);
+            label.setMinimumSize(new Dimension(-1, 30));
+            recentItemsPanel.add(label);
+        } else for (File item : recentItems) {
             recentItemsPanel.add(new RecentItemButton(item));
         }
         recentItemsPanel.revalidate();
