@@ -36,7 +36,7 @@ public class DecryptRoute extends Route {
         openedItemPanelInner.add(new OpenedItemLabel(targetItem));
         algorithmPanelComboBox.addActionListener(this::handleAlgorithmPanelComboBoxAction);
         algorithmPanelAutoCheckBox.addItemListener(this::handleAlgorithmPanelAutoCheckBoxChange);
-        decryptButton.addActionListener(this::handleEncryptButtonAction);
+        decryptButton.addActionListener(this::handleDecryptButtonAction);
         cancelButton.addActionListener(this::handleCancelButtonAction);
     }
 
@@ -69,8 +69,10 @@ public class DecryptRoute extends Route {
         }
     }
 
-    private void handleEncryptButtonAction(ActionEvent event) {
-        MainFrame.getInstance().navigate(new StartRoute());
+    private void handleDecryptButtonAction(ActionEvent event) {
+        var mainFrame = MainFrame.getInstance();
+        mainFrame.addToRecentItems(targetItem);
+        mainFrame.navigate(new StartRoute());
     }
 
     private void handleCancelButtonAction(ActionEvent event) {

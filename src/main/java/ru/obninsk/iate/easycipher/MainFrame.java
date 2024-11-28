@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
     private static MainFrame instance;
-    private final ArrayList<File> recentlyEncryptedItems = new ArrayList<>();
+    private final ArrayList<File> recentItems = new ArrayList<>();
 
     private MainFrame() {
         SwingUtilities.invokeLater(() -> navigate(new StartRoute()));
@@ -25,15 +25,15 @@ public class MainFrame extends JFrame {
         revalidate();
     }
 
-    public ArrayList<File> getRecentlyEncryptedItems() {
-        return recentlyEncryptedItems;
+    public ArrayList<File> getRecentItems() {
+        return recentItems;
     }
 
-    public void addItemToRecentlyEncrypted(File newItem) {
+    public void addToRecentItems(File newItem) {
         String newItemPath = newItem.getPath();
-        if (recentlyEncryptedItems.stream()
+        if (recentItems.stream()
                 .anyMatch((item) -> item.getPath().equals(newItemPath))) return;
 
-        recentlyEncryptedItems.add(newItem);
+        recentItems.add(newItem);
     }
 }
