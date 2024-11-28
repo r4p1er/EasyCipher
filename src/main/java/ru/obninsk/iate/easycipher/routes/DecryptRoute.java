@@ -71,6 +71,7 @@ public class DecryptRoute extends Route {
 
     private void handleDecryptButtonAction(ActionEvent event) {
         var mainFrame = MainFrame.getInstance();
+        mainFrame.showNotification("Item decrypted successfully");
         mainFrame.addToRecentItems(targetItem);
         mainFrame.navigate(new StartRoute());
     }
