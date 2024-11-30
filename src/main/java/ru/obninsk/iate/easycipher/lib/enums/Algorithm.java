@@ -1,4 +1,4 @@
-package ru.obninsk.iate.easycipher.lib;
+package ru.obninsk.iate.easycipher.lib.enums;
 
 public enum Algorithm {
     AES,
