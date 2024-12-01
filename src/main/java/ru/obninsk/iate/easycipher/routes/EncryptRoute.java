@@ -3,7 +3,7 @@ package ru.obninsk.iate.easycipher.routes;
 import org.jetbrains.annotations.*;
 import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
-import ru.obninsk.iate.easycipher.lib.Algorithm;
+import ru.obninsk.iate.easycipher.lib.enums.Algorithm;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
