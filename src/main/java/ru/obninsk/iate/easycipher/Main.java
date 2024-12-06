@@ -13,10 +13,10 @@ public class Main {
     private final static Dimension MINIMUM_DIMENSION = new Dimension(550, 450);
 
     public static void main(String[] args) {
+        LocalizationUtility.setLocale();
+
         FlatOneDarkIJTheme.setup();
         maybeSetDefaultFont();
-
-        LocalizationUtility.setLocale();
 
         SwingUtilities.invokeLater(() -> {
             var mainFrame = MainFrame.getInstance();
