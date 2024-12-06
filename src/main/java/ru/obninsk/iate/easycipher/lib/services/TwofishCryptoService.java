@@ -17,11 +17,19 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
+import java.util.Objects;
 
-public class AesCryptoService implements ICryptoService {
+public class TwofishCryptoService implements ICryptoService {
     static {
         Security.addProvider(new BouncyCastleProvider());
     }
+
+    private static final String ALGORITHM = "Twofish";
+    private static final String MODE = "CBC";
+    private static final String PADDING = "PKCS7Padding";
+    private static final String TRANSFORMATION = String.join("/", ALGORITHM, MODE, PADDING);
+    private static final int KEY_LENGTH = 32;
+    private static final int IV_LENGTH = 16;
 
     @Override
     public boolean encryptFile(Path filePath, String key, Path out) {
@@ -29,16 +37,17 @@ public class AesCryptoService implements ICryptoService {
 
         try (var inputStream = new BufferedInputStream(Files.newInputStream(filePath));
              var outputStream = new BufferedOutputStream(Files.newOutputStream(out))) {
+
             var messageDigest = MessageDigest.getInstance("SHA-256");
 
-            byte[] keyBytes = Arrays.copyOf(key.getBytes(), 32);
-            SecretKeySpec secretKey = new SecretKeySpec(keyBytes, "AES");
+            byte[] keyBytes = Arrays.copyOf(key.getBytes(), KEY_LENGTH);
+            SecretKeySpec secretKey = new SecretKeySpec(keyBytes, ALGORITHM);
 
-            byte[] iv = new byte[16];
+            byte[] iv = new byte[IV_LENGTH];
             new SecureRandom().nextBytes(iv);
             AlgorithmParameterSpec ivSpec = new javax.crypto.spec.IvParameterSpec(iv);
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC");
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION, "BC");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
 
             byte[] buffer = new byte[4096];
@@ -48,27 +57,31 @@ public class AesCryptoService implements ICryptoService {
                 totalRead += bytesRead;
                 messageDigest.update(buffer, 0, bytesRead);
                 byte[] encrypted = cipher.update(buffer, 0, bytesRead);
-                outputStream.write(encrypted);
+                if (encrypted != null) {
+                    outputStream.write(encrypted);
+                }
             }
 
             byte[] finalBytes = cipher.doFinal();
-            if (finalBytes.length > 0) {
+            if (finalBytes != null && finalBytes.length > 0) {
                 outputStream.write(finalBytes);
             }
 
             IMetadataBlockService metadata = new MetadataBlockService();
-            metadata.setAlgorithm("AES");
-            metadata.setMode("CBC");
-            metadata.setPadding("PKCS7Padding");
+            metadata.setAlgorithm(ALGORITHM);
+            metadata.setMode(MODE);
+            metadata.setPadding(PADDING);
             metadata.setIv(iv);
             metadata.setDataLength(totalRead);
             metadata.setDataHash(messageDigest.digest());
 
-            if (!metadata.write(outputStream)) throw new IOException();
-        } catch (Exception ignored) {
+            if (!metadata.write(outputStream))
+                throw new IOException("Failed to write metadata.");
+
+        } catch (Exception e) {
             try {
                 Files.deleteIfExists(out);
-            } catch (Exception ignored2) {}
+            } catch (Exception ignored) {}
 
             error = true;
         }
@@ -89,43 +102,52 @@ public class AesCryptoService implements ICryptoService {
 
         try (var inputStream = new BufferedInputStream(Files.newInputStream(filePath));
              var outputStream = new BufferedOutputStream(Files.newOutputStream(out))) {
-            var messageDigest = MessageDigest.getInstance("SHA-256");
-            IMetadataBlockService metadata = new MetadataBlockService();
-            if (!metadata.read(filePath)) throw new IOException();
 
-            byte[] keyBytes = Arrays.copyOf(key.getBytes(), 32);
-            SecretKeySpec secretKey = new SecretKeySpec(keyBytes, metadata.getAlgorithm());
+            var messageDigest = MessageDigest.getInstance("SHA-256");
+
+            IMetadataBlockService metadata = new MetadataBlockService();
+            if (!metadata.read(filePath)) throw new IOException("Failed to read metadata.");
+
+            byte[] keyBytes = Arrays.copyOf(key.getBytes(), KEY_LENGTH);
+            SecretKeySpec secretKey = new SecretKeySpec(keyBytes, ALGORITHM);
 
             AlgorithmParameterSpec ivSpec = new javax.crypto.spec.IvParameterSpec(metadata.getIv());
 
-            Cipher cipher = Cipher.getInstance(metadata.getAlgorithm() + "/" + metadata.getMode() + "/" + metadata.getPadding(), "BC");
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION, "BC");
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
 
+            long dataSize = Files.size(filePath) - metadata.getBlockLength();
             byte[] buffer = new byte[4096];
             int bytesRead;
-            long totalBytesRead = 0, totalDecryptedBytes = 0, dataSize = Files.size(filePath) - metadata.getBlockLength();
+            long totalBytesRead = 0;
+
             while (totalBytesRead < dataSize && (bytesRead = inputStream.read(buffer)) != -1) {
                 int bytesToProcess = (int) Math.min(bytesRead, dataSize - totalBytesRead);
                 byte[] decrypted = cipher.update(buffer, 0, bytesToProcess);
-                totalDecryptedBytes += decrypted.length;
-                messageDigest.update(decrypted);
-                outputStream.write(decrypted);
+                if (decrypted != null) {
+                    messageDigest.update(decrypted);
+                    outputStream.write(decrypted);
+                }
                 totalBytesRead += bytesToProcess;
             }
 
             byte[] finalBytes = cipher.doFinal();
-            if (finalBytes.length > 0) {
+            if (finalBytes != null && finalBytes.length > 0) {
                 messageDigest.update(finalBytes);
-                totalDecryptedBytes += finalBytes.length;
                 outputStream.write(finalBytes);
             }
 
-            if (!Arrays.equals(metadata.getDataHash(), messageDigest.digest()) || metadata.getDataLength() != totalDecryptedBytes) throw new IOException();
-        } catch (Exception ignored) {
+            byte[] computedHash = messageDigest.digest();
+            if (!Arrays.equals(metadata.getDataHash(), computedHash) ||
+                    metadata.getDataLength() != (totalBytesRead + Objects.requireNonNull(finalBytes).length)) {
+                throw new IOException("Data integrity check failed.");
+            }
+
+        } catch (Exception e) {
             try {
                 Files.deleteIfExists(out);
-            } catch (Exception ignored2) {}
-
+            } catch (Exception ignored) {
+            }
             error = true;
         }
 
@@ -140,47 +162,54 @@ public class AesCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean encryptDirectory(Path dirPath, String key, Path out) {
+    public boolean encryptDirectory(Path directoryPath, String key, Path out) {
         boolean error = false;
-        Path tempZip = null;
+        Path temporaryZip = null;
 
         try {
-            tempZip = Files.createTempFile("temp-", ".zip");
-            if (!ZipUtility.createZip(dirPath, tempZip)) throw new IOException();
-            if (!encryptFile(tempZip, key, out)) throw new IOException();
-        } catch (Exception ignored) {
+            temporaryZip = Files.createTempFile("temp-", ".zip");
+            if (!ZipUtility.createZip(directoryPath, temporaryZip))
+                throw new IOException("Failed to create ZIP archive.");
+
+            if (!encryptFile(temporaryZip, key, out))
+                throw new IOException("Failed to encrypt ZIP archive.");
+
+        } catch (Exception e) {
             error = true;
         } finally {
             try {
-                if (tempZip != null) Files.deleteIfExists(tempZip);
-            } catch (Exception ignored) {}
+                if (temporaryZip != null) Files.deleteIfExists(temporaryZip);
+            } catch (Exception ignored) {
+            }
         }
 
         return !error;
     }
 
     @Override
-    public boolean encryptDirectory(Path dirPath, String key) {
-        var newFileName = dirPath.getFileName().toString() + ".encd";
+    public boolean encryptDirectory(Path directoryPath, String key) {
+        var newFileName = directoryPath.getFileName().toString() + ".encd";
 
-        return encryptDirectory(dirPath, key, dirPath.resolveSibling(newFileName));
+        return encryptDirectory(directoryPath, key, directoryPath.resolveSibling(newFileName));
     }
 
     @Override
-    public boolean decryptDirectory(Path encdPath, String key, Path outDir) {
+    public boolean decryptDirectory(Path encryptedPath, String key, Path outDir) {
         boolean error = false;
         Path tempZip = null;
 
         try {
             tempZip = Files.createTempFile("temp-", ".zip");
-            if (!decryptFile(encdPath, key, tempZip)) throw new IOException();
-            if (!ZipUtility.extractZip(tempZip, outDir)) throw new IOException();
-        } catch (Exception ignored) {
+            if (!decryptFile(encryptedPath, key, tempZip)) throw new IOException("Failed to decrypt archive.");
+
+            if (!ZipUtility.extractZip(tempZip, outDir)) throw new IOException("Failed to extract ZIP archive.");
+        } catch (Exception e) {
             error = true;
         } finally {
             try {
                 if (tempZip != null) Files.deleteIfExists(tempZip);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         return !error;

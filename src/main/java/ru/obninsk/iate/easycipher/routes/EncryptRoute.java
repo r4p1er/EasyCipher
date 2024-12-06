@@ -3,7 +3,7 @@ package ru.obninsk.iate.easycipher.routes;
 import org.jetbrains.annotations.*;
 import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
-import ru.obninsk.iate.easycipher.lib.enums.Algorithm;
+import ru.obninsk.iate.easycipher.lib.enums.EncryptionAlgorithm;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -26,7 +26,7 @@ public class EncryptRoute extends Route {
     private JButton cancelButton;
 
     private final File targetItem;
-    private Algorithm selectedAlgorithm = Algorithm.AES;
+    private EncryptionAlgorithm selectedAlgorithm = EncryptionAlgorithm.AES;
     private static final String[] ALGORITHM_OPTIONS = { "AES", "Blowfish", "Twofish" };
     private static final String[] ALGORITHM_DESCRIPTIONS = {
             "AES Description, AES Description, AES Description, AES Description, AES Description.",
@@ -60,9 +60,11 @@ public class EncryptRoute extends Route {
     private void handleAlgorithmPanelComboBoxAction(ActionEvent event) {
         int selectedIndex = algorithmPanelComboBox.getSelectedIndex();
 
-        if (selectedIndex == 0) selectedAlgorithm = Algorithm.AES;
-        else if (selectedIndex == 1) selectedAlgorithm = Algorithm.BLOWFISH;
-        else selectedAlgorithm = Algorithm.TWOFISH;
+        switch (selectedIndex) {
+            case 0 -> selectedAlgorithm = EncryptionAlgorithm.AES;
+            case 1 -> selectedAlgorithm = EncryptionAlgorithm.BLOWFISH;
+            default -> selectedAlgorithm = EncryptionAlgorithm.TWOFISH;
+        }
 
         algorithmPanelDescription.setText(ALGORITHM_DESCRIPTIONS[selectedIndex]);
         SwingUtilities.invokeLater(() -> algorithmPanelDescription.revalidate());
