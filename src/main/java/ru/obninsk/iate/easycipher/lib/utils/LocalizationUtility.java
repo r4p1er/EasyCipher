@@ -2,6 +2,7 @@ package ru.obninsk.iate.easycipher.lib.utils;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javax.swing.UIManager;
 
 public class LocalizationUtility {
 
@@ -22,6 +23,8 @@ public class LocalizationUtility {
                 "MessagesBundle",
                 currentLocale,
                 new CustomResourceBundleControl(RESOURCE_FOLDER));
+
+        updateUIManager(currentBundle);
     }
 
     public static void setLocale(Locale locale) {
@@ -34,6 +37,15 @@ public class LocalizationUtility {
                     "MessagesBundle",
                     currentLocale,
                     new CustomResourceBundleControl(RESOURCE_FOLDER));
+
+            updateUIManager(currentBundle);
+        }
+    }
+
+    private static void updateUIManager(ResourceBundle bundle) {
+        for (String key : bundle.keySet()) {
+            String value = bundle.getString(key);
+            UIManager.put(key, value);
         }
     }
 
