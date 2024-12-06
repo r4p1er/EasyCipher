@@ -17,7 +17,6 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class TwofishCryptoService implements ICryptoService {
     static {
@@ -108,38 +107,44 @@ public class TwofishCryptoService implements ICryptoService {
             IMetadataBlockService metadata = new MetadataBlockService();
             if (!metadata.read(filePath)) throw new IOException("Failed to read metadata.");
 
+            String algorithm = metadata.getAlgorithm();
+            String mode = metadata.getMode();
+            String padding = metadata.getPadding();
+            String transformation = String.join("/", algorithm, mode, padding);
+
             byte[] keyBytes = Arrays.copyOf(key.getBytes(), KEY_LENGTH);
-            SecretKeySpec secretKey = new SecretKeySpec(keyBytes, ALGORITHM);
+            SecretKeySpec secretKey = new SecretKeySpec(keyBytes, algorithm);
 
             AlgorithmParameterSpec ivSpec = new javax.crypto.spec.IvParameterSpec(metadata.getIv());
 
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION, "BC");
+            Cipher cipher = Cipher.getInstance(transformation, "BC");
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
 
             long dataSize = Files.size(filePath) - metadata.getBlockLength();
             byte[] buffer = new byte[4096];
             int bytesRead;
-            long totalBytesRead = 0;
+            long totalDecryptedBytes = 0;
 
-            while (totalBytesRead < dataSize && (bytesRead = inputStream.read(buffer)) != -1) {
-                int bytesToProcess = (int) Math.min(bytesRead, dataSize - totalBytesRead);
+            while (totalDecryptedBytes < dataSize && (bytesRead = inputStream.read(buffer)) != -1) {
+                int bytesToProcess = (int) Math.min(bytesRead, dataSize - totalDecryptedBytes);
                 byte[] decrypted = cipher.update(buffer, 0, bytesToProcess);
                 if (decrypted != null) {
                     messageDigest.update(decrypted);
                     outputStream.write(decrypted);
+                    totalDecryptedBytes += decrypted.length;
                 }
-                totalBytesRead += bytesToProcess;
             }
 
             byte[] finalBytes = cipher.doFinal();
             if (finalBytes != null && finalBytes.length > 0) {
                 messageDigest.update(finalBytes);
                 outputStream.write(finalBytes);
+                totalDecryptedBytes += finalBytes.length;
             }
 
             byte[] computedHash = messageDigest.digest();
             if (!Arrays.equals(metadata.getDataHash(), computedHash) ||
-                    metadata.getDataLength() != (totalBytesRead + Objects.requireNonNull(finalBytes).length)) {
+                    metadata.getDataLength() != totalDecryptedBytes) {
                 throw new IOException("Data integrity check failed.");
             }
 
