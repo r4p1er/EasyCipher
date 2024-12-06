@@ -1,5 +1,7 @@
 package ru.obninsk.iate.easycipher.lib.abstractions;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public interface ICryptoService {
@@ -17,5 +19,16 @@ public interface ICryptoService {
 
     boolean decryptDirectory(Path dirPath, String key, Path out);
 
-    boolean decryptDirectory(Path dirPath, String key);
+    default boolean decryptDirectory(Path dirPath, String key) {
+        try {
+            Path parent = dirPath.getParent();
+            String fileNameWithoutExtension = dirPath.getFileName().toString().replaceFirst("[.][^.]+$", "");
+            Path targetDir = parent.resolve(fileNameWithoutExtension);
+            Files.createDirectories(targetDir);
+
+            return decryptDirectory(dirPath, key, targetDir);
+        } catch (IOException e) {
+            return false;
+        }
+    }
 }
