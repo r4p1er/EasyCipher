@@ -4,6 +4,8 @@ import org.jetbrains.annotations.*;
 import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
 import ru.obninsk.iate.easycipher.lib.enums.Algorithm;
+import ru.obninsk.iate.easycipher.lib.utils.LocalizationUtility;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
@@ -71,7 +73,7 @@ public class DecryptRoute extends Route {
 
     private void handleDecryptButtonAction(ActionEvent event) {
         var mainFrame = MainFrame.getInstance();
-        mainFrame.showNotification("Item decrypted successfully");
+        mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.item.decrypted"));
         mainFrame.addToRecentItems(targetItem);
         mainFrame.navigate(new StartRoute());
     }

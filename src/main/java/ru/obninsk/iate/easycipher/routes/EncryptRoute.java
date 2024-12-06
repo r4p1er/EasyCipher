@@ -4,9 +4,13 @@ import org.jetbrains.annotations.*;
 import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
 import ru.obninsk.iate.easycipher.lib.enums.Algorithm;
+import ru.obninsk.iate.easycipher.lib.utils.LocalizationUtility;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.security.SecureRandom;
+import java.util.Base64;
 
 public class EncryptRoute extends Route {
     private JPanel contentPane;
@@ -29,9 +33,9 @@ public class EncryptRoute extends Route {
     private Algorithm selectedAlgorithm = Algorithm.AES;
     private static final String[] ALGORITHM_OPTIONS = { "AES", "Blowfish", "Twofish" };
     private static final String[] ALGORITHM_DESCRIPTIONS = {
-            "AES Description, AES Description, AES Description, AES Description, AES Description.",
-            "Blowfish Description, Blowfish Description, Blowfish Description, Blowfish Description.",
-            "Twofish Description, Twofish Description, Twofish Description, Twofish Description.",
+            LocalizationUtility.getLocalizedString("label.aes.description"),
+            LocalizationUtility.getLocalizedString("label.blowfish.description"),
+            LocalizationUtility.getLocalizedString("label.twofish.description")
     };
 
     public EncryptRoute(@NotNull File targetItem) {
@@ -44,6 +48,13 @@ public class EncryptRoute extends Route {
         keygenPanelGenerateButton.addActionListener(this::handleKeygenPanelGenerateButtonAction);
         encryptButton.addActionListener(this::handleEncryptButtonAction);
         cancelButton.addActionListener(this::handleCancelButtonAction);
+    }
+
+    public static String generateSecureKey(int byteLength) {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] keyBytes = new byte[byteLength];
+        secureRandom.nextBytes(keyBytes);
+        return Base64.getEncoder().encodeToString(keyBytes);
     }
 
     @Override
@@ -69,12 +80,14 @@ public class EncryptRoute extends Route {
     }
 
     private void handleKeygenPanelGenerateButtonAction(ActionEvent event) {
-        keygenPanelTextField.setText("Very secure and, of course, random key");
+        int keySizeBytes = 32;
+        String key = generateSecureKey(keySizeBytes);
+        keygenPanelTextField.setText(key);
     }
 
     private void handleEncryptButtonAction(ActionEvent event) {
         var mainFrame = MainFrame.getInstance();
-        mainFrame.showNotification("Item encrypted successfully");
+        mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.item.encrypted"));
         mainFrame.addToRecentItems(targetItem);
         mainFrame.navigate(new StartRoute());
     }
