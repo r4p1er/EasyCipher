@@ -1,6 +1,8 @@
 package ru.obninsk.iate.easycipher;
 
 import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
+import ru.obninsk.iate.easycipher.lib.utils.LocalizationUtility;
+
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
@@ -13,6 +15,8 @@ public class Main {
     public static void main(String[] args) {
         FlatOneDarkIJTheme.setup();
         maybeSetDefaultFont();
+
+        LocalizationUtility.setLocale();
 
         SwingUtilities.invokeLater(() -> {
             var mainFrame = MainFrame.getInstance();
