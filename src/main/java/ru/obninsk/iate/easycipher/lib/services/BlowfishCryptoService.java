@@ -169,7 +169,7 @@ public class BlowfishCryptoService implements ICryptoService {
 
         } catch (Exception e) {
             try { Files.deleteIfExists(out); } catch (Exception ignored) {}
-            return  false;
+            return false;
 
         } finally {
             try {
