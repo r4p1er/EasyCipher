@@ -3,10 +3,20 @@ package ru.obninsk.iate.easycipher.routes;
 import org.jetbrains.annotations.*;
 import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
+import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
 import ru.obninsk.iate.easycipher.lib.enums.EncryptionAlgorithm;
+import ru.obninsk.iate.easycipher.lib.services.UserInputHandler;
+import ru.obninsk.iate.easycipher.lib.services.AesCryptoService;
+//TODO: после реализации вернуть import ru.obninsk.iate.easycipher.lib.services.BlowfishCryptoService;
+import ru.obninsk.iate.easycipher.lib.services.TwofishCryptoService;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.File;
 
 public class DecryptRoute extends Route {
@@ -72,10 +82,88 @@ public class DecryptRoute extends Route {
     }
 
     private void handleDecryptButtonAction(ActionEvent event) {
-        var mainFrame = MainFrame.getInstance();
-        mainFrame.showNotification("Item decrypted successfully");
-        mainFrame.addToRecentItems(targetItem);
-        mainFrame.navigate(new StartRoute());
+        String key = keyPanelTextField.getText().trim();
+        if (key.isEmpty()) {
+            MainFrame.getInstance().showNotification("The key cannot be empty.");
+            return;
+        }
+        ICryptoService cryptoService = null;
+        if (!autoAlgorithmDetection) {
+            cryptoService = switch (selectedAlgorithm) {
+                case AES -> new AesCryptoService();
+                case BLOWFISH -> null;//TODO: после реализации вернуть new BlowfishCryptoService();
+                case TWOFISH -> new TwofishCryptoService();
+            };
+        } else {
+            cryptoService = detectCryptoService(targetItem.toPath(), key);
+            if (cryptoService == null) {
+                MainFrame.getInstance().showNotification("Failed to detect the encryption algorithm.");
+                return;
+            }
+        }
+        Path targetPath = targetItem.toPath();
+        UserInputHandler handler = new UserInputHandler(cryptoService, key, targetPath);
+        Path outputPath = null;
+        if (targetItem.isFile()) {
+            String originalName = removeExtension(targetItem.getName());
+            outputPath = Paths.get(targetItem.getParent(), originalName);
+        } else if (targetItem.isDirectory()) {
+            outputPath = Paths.get(targetItem.getParent(), targetItem.getName().replace("_enc", ""));
+        }
+        boolean success = handler.performOperation("decrypt", outputPath);
+        if (success) {
+            MainFrame.getInstance().showNotification("Item decrypted successfully");
+            MainFrame.getInstance().addToRecentItems(targetItem);
+            MainFrame.getInstance().navigate(new StartRoute());
+        } else {
+            MainFrame.getInstance().showNotification("Failed to decrypt the item");
+        }
+    }
+
+    private ICryptoService detectCryptoService(Path path, String key) {
+        ICryptoService[] services = {
+                new AesCryptoService(),
+                //TODO: после реализации вернуть new BlowfishCryptoService(),
+                new TwofishCryptoService()
+        };
+        for (ICryptoService service : services) {
+            boolean result;
+            if (path.toFile().isDirectory()) {
+                Path tempDir = path.resolveSibling(path.getFileName().toString() + "_temp");
+                result = service.decryptDirectory(path, key, tempDir);
+                if (result) {
+                    try {
+                        deleteDirectoryRecursively(tempDir);
+                    } catch (Exception ignored) {}
+                    return service;
+                }
+            } else {
+                Path tempFile = path.resolveSibling(removeExtension(path.getFileName().toString()));
+                result = service.decryptFile(path, key, tempFile);
+                if (result) {
+                    try {
+                        Files.deleteIfExists(tempFile);
+                    } catch (Exception ignored) {}
+                    return service;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void deleteDirectoryRecursively(Path path) throws IOException {
+        if (Files.isDirectory(path)) {
+            try (var entries = Files.newDirectoryStream(path)) {
+                for (Path entry : entries) {
+                    deleteDirectoryRecursively(entry);
+                }
+            }
+        }
+        Files.delete(path);
+    }
+
+    private String removeExtension(String fileName) {
+        return fileName.replaceFirst("[.][^.]+$", "");
     }
 
     private void handleCancelButtonAction(ActionEvent event) {
