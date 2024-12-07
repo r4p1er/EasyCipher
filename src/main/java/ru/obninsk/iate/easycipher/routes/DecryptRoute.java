@@ -4,7 +4,9 @@ import org.jetbrains.annotations.*;
 import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
 import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
+import ru.obninsk.iate.easycipher.lib.abstractions.IMetadataBlockService;
 import ru.obninsk.iate.easycipher.lib.enums.EncryptionAlgorithm;
+import ru.obninsk.iate.easycipher.lib.services.MetadataBlockService;
 import ru.obninsk.iate.easycipher.lib.services.UserInputHandler;
 import ru.obninsk.iate.easycipher.lib.services.AesCryptoService;
 //TODO: после реализации вернуть import ru.obninsk.iate.easycipher.lib.services.BlowfishCryptoService;
@@ -13,8 +15,6 @@ import ru.obninsk.iate.easycipher.lib.services.TwofishCryptoService;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.File;
@@ -87,7 +87,7 @@ public class DecryptRoute extends Route {
             MainFrame.getInstance().showNotification("The key cannot be empty.");
             return;
         }
-        ICryptoService cryptoService = null;
+        ICryptoService cryptoService;
         if (!autoAlgorithmDetection) {
             cryptoService = switch (selectedAlgorithm) {
                 case AES -> new AesCryptoService();
@@ -95,7 +95,7 @@ public class DecryptRoute extends Route {
                 case TWOFISH -> new TwofishCryptoService();
             };
         } else {
-            cryptoService = detectCryptoService(targetItem.toPath(), key);
+            cryptoService = detectCryptoService(targetItem.toPath());
             if (cryptoService == null) {
                 MainFrame.getInstance().showNotification("Failed to detect the encryption algorithm.");
                 return;
@@ -120,46 +120,24 @@ public class DecryptRoute extends Route {
         }
     }
 
-    private ICryptoService detectCryptoService(Path path, String key) {
-        ICryptoService[] services = {
-                new AesCryptoService(),
-                //TODO: после реализации вернуть new BlowfishCryptoService(),
-                new TwofishCryptoService()
-        };
-        for (ICryptoService service : services) {
-            boolean result;
-            if (path.toFile().isDirectory()) {
-                Path tempDir = path.resolveSibling(path.getFileName().toString() + "_temp");
-                result = service.decryptDirectory(path, key, tempDir);
-                if (result) {
-                    try {
-                        deleteDirectoryRecursively(tempDir);
-                    } catch (Exception ignored) {}
-                    return service;
-                }
-            } else {
-                Path tempFile = path.resolveSibling(removeExtension(path.getFileName().toString()));
-                result = service.decryptFile(path, key, tempFile);
-                if (result) {
-                    try {
-                        Files.deleteIfExists(tempFile);
-                    } catch (Exception ignored) {}
-                    return service;
-                }
-            }
+    private ICryptoService detectCryptoService(Path path) {
+        IMetadataBlockService metadataService = new MetadataBlockService();
+        boolean metadataRead = metadataService.read(path);
+        if (!metadataRead) {
+            return null;
         }
-        return null;
-    }
 
-    private void deleteDirectoryRecursively(Path path) throws IOException {
-        if (Files.isDirectory(path)) {
-            try (var entries = Files.newDirectoryStream(path)) {
-                for (Path entry : entries) {
-                    deleteDirectoryRecursively(entry);
-                }
-            }
+        String algorithm = metadataService.getAlgorithm();
+        if (algorithm == null || algorithm.isEmpty()) {
+            return null;
         }
-        Files.delete(path);
+
+        return switch (algorithm.toUpperCase()) {
+            case "AES" -> new AesCryptoService();
+            case "BLOWFISH" -> null; // TODO: после реализации вернуть new BlowfishCryptoService();
+            case "TWOFISH" -> new TwofishCryptoService();
+            default -> null;
+        };
     }
 
     private String removeExtension(String fileName) {
