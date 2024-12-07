@@ -28,7 +28,7 @@ public class BlowfishCryptoService implements ICryptoService {
     private static final String TRANSFORMATION = String.join("/", ALGORITHM, MODE, PADDING);
     private static final String PROVIDER = "BC";
     private static final int KEY_LENGTH = 32;
-    private static final int IV_LENGTH = 16;
+    private static final int IV_LENGTH = 8;
     private static final int READ_BUFFER_SIZE = 4096;
     private static final String TEMP_ZIP_PREFIX = "temp-";
     private static final String TEMP_ZIP_SUFFIX = ".zip";
@@ -68,7 +68,9 @@ public class BlowfishCryptoService implements ICryptoService {
             metadata.setAlgorithm(ALGORITHM);
             metadata.setMode(MODE);
             metadata.setPadding(PADDING);
-            metadata.setIv(iv);
+            byte[] paddedIv = new byte[16]; // the length of 16 is hardcoded but needs to be 8 for this algorithm
+            System.arraycopy(iv, 0, paddedIv, 0, IV_LENGTH);
+            metadata.setIv(paddedIv);
             metadata.setDataLength(totalRead);
             metadata.setDataHash(messageDigest.digest());
 
@@ -103,11 +105,14 @@ public class BlowfishCryptoService implements ICryptoService {
             String mode = metadata.getMode();
             String padding = metadata.getPadding();
             String transformation = String.join("/", algorithm, mode, padding);
+            byte[] paddedIv = metadata.getIv();
+            byte[] iv = new byte[IV_LENGTH]; // the length of 16 is hardcoded but needs to be 8 for this algorithm
+            System.arraycopy(paddedIv, 0, iv, 0, IV_LENGTH);
 
             byte[] keyBytes = Arrays.copyOf(key.getBytes(), KEY_LENGTH);
             var secretKey = new SecretKeySpec(keyBytes, algorithm);
 
-            var ivSpec = new javax.crypto.spec.IvParameterSpec(metadata.getIv());
+            var ivSpec = new IvParameterSpec(iv);
 
             var cipher = Cipher.getInstance(transformation, PROVIDER);
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
