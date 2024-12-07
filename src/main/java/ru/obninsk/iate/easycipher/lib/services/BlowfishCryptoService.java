@@ -86,12 +86,6 @@ public class BlowfishCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean encryptFile(@NotNull Path filePath, String key) {
-        var newFileName = filePath.getFileName().toString() + ".enc";
-        return encryptFile(filePath, key, filePath.resolveSibling(newFileName));
-    }
-
-    @Override
     public boolean decryptFile(Path filePath, String key, Path out) {
         try (var inputStream = new BufferedInputStream(Files.newInputStream(filePath));
              var outputStream = new BufferedOutputStream(Files.newOutputStream(out))) {
@@ -153,12 +147,6 @@ public class BlowfishCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean decryptFile(@NotNull Path filePath, String key) {
-        var newFileName = filePath.getFileName().toString() + ".dec";
-        return decryptFile(filePath, key, filePath.resolveSibling(newFileName));
-    }
-
-    @Override
     public boolean encryptDirectory(Path directoryPath, String key, Path out) {
         Path temporaryZipPath = null;
 
@@ -181,12 +169,6 @@ public class BlowfishCryptoService implements ICryptoService {
                 if (temporaryZipPath != null) Files.deleteIfExists(temporaryZipPath);
             } catch (Exception ignored) {}
         }
-    }
-
-    @Override
-    public boolean encryptDirectory(@NotNull Path directoryPath, String key) {
-        var newFileName = directoryPath.getFileName().toString() + ".encd";
-        return encryptDirectory(directoryPath, key, directoryPath.resolveSibling(newFileName));
     }
 
     @Override

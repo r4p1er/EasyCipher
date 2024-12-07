@@ -77,13 +77,6 @@ public class AesCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean encryptFile(Path filePath, String key) {
-        var newFileName = filePath.getFileName().toString() + ".enc";
-
-        return encryptFile(filePath, key, filePath.resolveSibling(newFileName));
-    }
-
-    @Override
     public boolean decryptFile(Path filePath, String key, Path out) {
         boolean error = false;
 
@@ -133,13 +126,6 @@ public class AesCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean decryptFile(Path filePath, String key) {
-        var newFileName = filePath.getFileName().toString() + ".dec";
-
-        return decryptFile(filePath, key, filePath.resolveSibling(newFileName));
-    }
-
-    @Override
     public boolean encryptDirectory(Path dirPath, String key, Path out) {
         boolean error = false;
         Path tempZip = null;
@@ -158,13 +144,6 @@ public class AesCryptoService implements ICryptoService {
         }
 
         return !error;
-    }
-
-    @Override
-    public boolean encryptDirectory(Path dirPath, String key) {
-        var newFileName = dirPath.getFileName().toString() + ".encd";
-
-        return encryptDirectory(dirPath, key, dirPath.resolveSibling(newFileName));
     }
 
     @Override

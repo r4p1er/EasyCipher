@@ -89,13 +89,6 @@ public class TwofishCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean encryptFile(Path filePath, String key) {
-        var newFileName = filePath.getFileName().toString() + ".enc";
-
-        return encryptFile(filePath, key, filePath.resolveSibling(newFileName));
-    }
-
-    @Override
     public boolean decryptFile(Path filePath, String key, Path out) {
         boolean error = false;
 
@@ -160,13 +153,6 @@ public class TwofishCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean decryptFile(Path filePath, String key) {
-        var newFileName = filePath.getFileName().toString() + ".dec";
-
-        return decryptFile(filePath, key, filePath.resolveSibling(newFileName));
-    }
-
-    @Override
     public boolean encryptDirectory(Path directoryPath, String key, Path out) {
         boolean error = false;
         Path temporaryZip = null;
@@ -190,13 +176,6 @@ public class TwofishCryptoService implements ICryptoService {
         }
 
         return !error;
-    }
-
-    @Override
-    public boolean encryptDirectory(Path directoryPath, String key) {
-        var newFileName = directoryPath.getFileName().toString() + ".encd";
-
-        return encryptDirectory(directoryPath, key, directoryPath.resolveSibling(newFileName));
     }
 
     @Override
