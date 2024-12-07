@@ -34,7 +34,7 @@ public class BlowfishCryptoService implements ICryptoService {
     private static final String TEMP_ZIP_SUFFIX = ".zip";
 
     @Override
-    public boolean encryptFile(Path filePath, String key, Path out) {
+    public boolean encryptFile(@NotNull Path filePath, String key, @NotNull Path out) {
         try (var inputStream = new BufferedInputStream(Files.newInputStream(filePath));
              var outputStream = new BufferedOutputStream(Files.newOutputStream(out))) {
 
@@ -86,13 +86,7 @@ public class BlowfishCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean encryptFile(@NotNull Path filePath, String key) {
-        var newFileName = filePath.getFileName().toString() + ".enc";
-        return encryptFile(filePath, key, filePath.resolveSibling(newFileName));
-    }
-
-    @Override
-    public boolean decryptFile(Path filePath, String key, Path out) {
+    public boolean decryptFile(@NotNull Path filePath, String key, @NotNull Path out) {
         try (var inputStream = new BufferedInputStream(Files.newInputStream(filePath));
              var outputStream = new BufferedOutputStream(Files.newOutputStream(out))) {
 
@@ -153,13 +147,7 @@ public class BlowfishCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean decryptFile(@NotNull Path filePath, String key) {
-        var newFileName = filePath.getFileName().toString() + ".dec";
-        return decryptFile(filePath, key, filePath.resolveSibling(newFileName));
-    }
-
-    @Override
-    public boolean encryptDirectory(Path directoryPath, String key, Path out) {
+    public boolean encryptDirectory(@NotNull Path directoryPath, String key, @NotNull Path out) {
         Path temporaryZipPath = null;
 
         try {
@@ -183,13 +171,7 @@ public class BlowfishCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean encryptDirectory(@NotNull Path directoryPath, String key) {
-        var newFileName = directoryPath.getFileName().toString() + ".encd";
-        return encryptDirectory(directoryPath, key, directoryPath.resolveSibling(newFileName));
-    }
-
-    @Override
-    public boolean decryptDirectory(Path encryptedPath, String key, Path outDir) {
+    public boolean decryptDirectory(@NotNull Path encryptedPath, String key, @NotNull Path outDir) {
         Path tempZipPath = null;
 
         try {

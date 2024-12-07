@@ -1,5 +1,7 @@
 package ru.obninsk.iate.easycipher.lib.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.FileVisitResult;
@@ -22,7 +24,7 @@ public class ZipUtility {
         try (var zipOutputStream = new ZipOutputStream(Files.newOutputStream(zipFilePath))) {
             Files.walkFileTree(sourceDir, new SimpleFileVisitor<>() {
                 @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                public @NotNull FileVisitResult visitFile(Path file, @NotNull BasicFileAttributes attrs) throws IOException {
                     zipOutputStream.putNextEntry(new ZipEntry(sourceDir.relativize(file).toString()));
                     Files.copy(file, zipOutputStream);
                     zipOutputStream.closeEntry();
@@ -40,7 +42,7 @@ public class ZipUtility {
         return !error;
     }
 
-    public static boolean createZip(Path sourceDir) {
+    public static boolean createZip(@NotNull Path sourceDir) {
         var newFileName = sourceDir.getFileName().toString() + ".zip";
 
         return createZip(sourceDir, sourceDir.resolveSibling(newFileName));
@@ -70,7 +72,7 @@ public class ZipUtility {
         return !error;
     }
 
-    public static boolean extractZip(Path zipFilePath) {
+    public static boolean extractZip(@NotNull Path zipFilePath) {
         try {
             Path parent = zipFilePath.getParent();
             if (parent == null) return false;
