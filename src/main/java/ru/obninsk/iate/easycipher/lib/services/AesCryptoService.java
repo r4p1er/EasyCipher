@@ -136,7 +136,6 @@ public class AesCryptoService implements ICryptoService {
             if (!ZipUtility.createZip(dirPath, tempZip)) throw new IOException();
             if (!encryptFile(tempZip, key, out)) throw new IOException();
         } catch (Exception e) {
-            try { Files.deleteIfExists(out); } catch (Exception ignored) {}
             error = true;
         } finally {
             try {
@@ -157,7 +156,6 @@ public class AesCryptoService implements ICryptoService {
             if (!decryptFile(encdPath, key, tempZip)) throw new IOException();
             if (!ZipUtility.extractZip(tempZip, outDir)) throw new IOException();
         } catch (Exception e) {
-            try { Files.deleteIfExists(outDir); } catch (Exception ignored) {}
             error = true;
         } finally {
             try {

@@ -161,7 +161,6 @@ public class BlowfishCryptoService implements ICryptoService {
             return true;
 
         } catch (Exception e) {
-            try { Files.deleteIfExists(out); } catch (Exception ignored) {}
             return false;
 
         } finally {
@@ -186,7 +185,6 @@ public class BlowfishCryptoService implements ICryptoService {
             return true;
 
         } catch (Exception e) {
-            try { Files.deleteIfExists(outDir); } catch (Exception ignored) {}
             return false;
 
         } finally {
