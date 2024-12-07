@@ -1,6 +1,7 @@
 package ru.obninsk.iate.easycipher.lib.services;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.jetbrains.annotations.NotNull;
 import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
 import ru.obninsk.iate.easycipher.lib.abstractions.IMetadataBlockService;
 import ru.obninsk.iate.easycipher.lib.utils.ZipUtility;
@@ -24,7 +25,7 @@ public class AesCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean encryptFile(Path filePath, String key, Path out) {
+    public boolean encryptFile(@NotNull Path filePath, String key, @NotNull Path out) {
         boolean error = false;
 
         try (var inputStream = new BufferedInputStream(Files.newInputStream(filePath));
@@ -77,7 +78,7 @@ public class AesCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean decryptFile(Path filePath, String key, Path out) {
+    public boolean decryptFile(@NotNull Path filePath, String key, @NotNull Path out) {
         boolean error = false;
 
         try (var inputStream = new BufferedInputStream(Files.newInputStream(filePath));
@@ -126,7 +127,7 @@ public class AesCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean encryptDirectory(Path dirPath, String key, Path out) {
+    public boolean encryptDirectory(@NotNull Path dirPath, String key, @NotNull Path out) {
         boolean error = false;
         Path tempZip = null;
 
@@ -147,7 +148,7 @@ public class AesCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean decryptDirectory(Path encdPath, String key, Path outDir) {
+    public boolean decryptDirectory(@NotNull Path encdPath, String key, @NotNull Path outDir) {
         boolean error = false;
         Path tempZip = null;
 

@@ -30,7 +30,7 @@ public interface ICryptoService {
         return encryptDirectory(directoryPath, key, directoryPath.resolveSibling(newFileName));
     }
 
-    default boolean decryptDirectory(Path dirPath, String key) {
+    default boolean decryptDirectory(@NotNull Path dirPath, String key) {
         try {
             Path parent = dirPath.getParent();
             String fileNameWithoutExtension = dirPath.getFileName().toString().replaceFirst("[.][^.]+$", "");
