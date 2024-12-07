@@ -180,6 +180,7 @@ public class TwofishCryptoService implements ICryptoService {
                 throw new IOException("Failed to encrypt ZIP archive.");
 
         } catch (Exception e) {
+            try { Files.deleteIfExists(out); } catch (Exception ignored) {}
             error = true;
         } finally {
             try {
@@ -209,6 +210,7 @@ public class TwofishCryptoService implements ICryptoService {
 
             if (!ZipUtility.extractZip(tempZip, outDir)) throw new IOException("Failed to extract ZIP archive.");
         } catch (Exception e) {
+            try { Files.deleteIfExists(outDir); } catch (Exception ignored) {}
             error = true;
         } finally {
             try {
