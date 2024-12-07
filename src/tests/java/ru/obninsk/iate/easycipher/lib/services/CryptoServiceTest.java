@@ -1,16 +1,29 @@
 package ru.obninsk.iate.easycipher.lib.services;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.FieldSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 
-public class TwofishCryptoServiceTest {
+public class CryptoServiceTest {
 
-    private final TwofishCryptoService cryptoService = new TwofishCryptoService();
+    private static final List<ICryptoService> cryptoServices = Arrays.asList(
+            new AesCryptoService(),
+            new BlowfishCryptoService(),
+            new TwofishCryptoService()
+    );
+
     private Path originalFile;
     private Path encryptedFile;
     private Path decryptedFile;
@@ -43,8 +56,9 @@ public class TwofishCryptoServiceTest {
         Files.deleteIfExists(decryptedFile);
     }
 
-    @Test
-    public void testEncryptAndDecryptFile() throws Exception {
+    @ParameterizedTest
+    @FieldSource("cryptoServices")
+    public void testEncryptAndDecryptFile(@NotNull ICryptoService cryptoService) throws Exception {
         String key = "MySecretKey1234567890";
         boolean encryptSuccess = cryptoService.encryptFile(originalFile, key, encryptedFile);
         assertTrue(encryptSuccess, "Шифрование должно пройти успешно");
