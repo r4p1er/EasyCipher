@@ -24,12 +24,14 @@ public class BlowfishCryptoService implements ICryptoService {
     private static final String ALGORITHM = "Blowfish";
     private static final String DIGEST_ALGORITHM = "SHA-256";
     private static final String MODE = "CBC";
-    private static final String PROVIDER = "BC";
     private static final String PADDING = "PKCS7Padding";
     private static final String TRANSFORMATION = String.join("/", ALGORITHM, MODE, PADDING);
+    private static final String PROVIDER = "BC";
     private static final int KEY_LENGTH = 32;
     private static final int IV_LENGTH = 16;
     private static final int READ_BUFFER_SIZE = 4096;
+    private static final String TEMP_ZIP_PREFIX = "temp-";
+    private static final String TEMP_ZIP_SUFFIX = ".zip";
 
     @Override
     public boolean encryptFile(Path filePath, String key, Path out) {
@@ -156,7 +158,7 @@ public class BlowfishCryptoService implements ICryptoService {
         Path temporaryZipPath = null;
 
         try {
-            temporaryZipPath = Files.createTempFile("temp-", ".zip");
+            temporaryZipPath = Files.createTempFile(TEMP_ZIP_PREFIX, TEMP_ZIP_SUFFIX);
 
             if (!ZipUtility.createZip(directoryPath, temporaryZipPath))
                 throw new IOException("Failed to create ZIP archive.");
@@ -187,7 +189,7 @@ public class BlowfishCryptoService implements ICryptoService {
         Path tempZipPath = null;
 
         try {
-            tempZipPath = Files.createTempFile("temp-", ".zip");
+            tempZipPath = Files.createTempFile(TEMP_ZIP_PREFIX, TEMP_ZIP_SUFFIX);
 
             if (!decryptFile(encryptedPath, key, tempZipPath))
                 throw new IOException("Failed to decrypt archive.");
