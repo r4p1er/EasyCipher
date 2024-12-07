@@ -3,12 +3,12 @@ package ru.obninsk.iate.easycipher.lib.services;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.net.URL;
 import java.util.Base64;
 import java.util.Comparator;
+import java.util.stream.Stream;
 
 public class TwofishCryptoServiceTest {
 
@@ -58,12 +58,19 @@ public class TwofishCryptoServiceTest {
         Files.deleteIfExists(encryptedFile);
         Files.deleteIfExists(decryptedFile);
 
-        Files.deleteIfExists(encryptedDir);
         if (Files.exists(decryptedDir)) {
-            Files.walk(decryptedDir)
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
+            try (Stream<Path> paths = Files.walk(decryptedDir)) {
+                paths.sorted(Comparator.reverseOrder())
+                        .map(Path::toFile)
+                        .forEach(file -> {
+                            if (!file.delete()) {
+                                System.err.println("Не удалось удалить файл: " + file.getAbsolutePath());
+                            }
+                        });
+            } catch (IOException e) {
+                System.err.println("Ошибка при обработке каталога: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
