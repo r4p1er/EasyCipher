@@ -6,17 +6,12 @@ import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
 import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
 import ru.obninsk.iate.easycipher.lib.abstractions.IMetadataBlockService;
 import ru.obninsk.iate.easycipher.lib.enums.EncryptionAlgorithm;
-import ru.obninsk.iate.easycipher.lib.services.MetadataBlockService;
-import ru.obninsk.iate.easycipher.lib.services.UserInputHandler;
-import ru.obninsk.iate.easycipher.lib.services.AesCryptoService;
-//TODO: после реализации вернуть import ru.obninsk.iate.easycipher.lib.services.BlowfishCryptoService;
-import ru.obninsk.iate.easycipher.lib.services.TwofishCryptoService;
+import ru.obninsk.iate.easycipher.lib.services.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.io.File;
 
 public class DecryptRoute extends Route {
@@ -119,34 +114,35 @@ public class DecryptRoute extends Route {
     }
 
     private void handleDecryptButtonAction(ActionEvent event) {
+        var mainFrame = MainFrame.getInstance();
         String key = keyPanelTextField.getText().trim();
         if (key.isEmpty()) {
-            MainFrame.getInstance().showNotification("The key cannot be empty.");
+            mainFrame.showNotification("The key cannot be empty.");
             return;
         }
         ICryptoService cryptoService;
         if (!autoAlgorithmDetection) {
             cryptoService = switch (selectedAlgorithm) {
                 case AES -> new AesCryptoService();
-                case BLOWFISH -> null;//TODO: после реализации вернуть new BlowfishCryptoService();
+                case BLOWFISH ->  new BlowfishCryptoService();
                 case TWOFISH -> new TwofishCryptoService();
             };
         } else {
             cryptoService = detectCryptoService(targetItem.toPath());
             if (cryptoService == null) {
-                MainFrame.getInstance().showNotification("Failed to detect the encryption algorithm.");
+                mainFrame.showNotification("Failed to detect the encryption algorithm.");
                 return;
             }
         }
         Path targetPath = targetItem.toPath();
         UserInputHandler handler = new UserInputHandler(cryptoService, key, targetPath);
-        boolean success = handler.performOperation("decrypt");
+        boolean success = handler.performOperation("decrypt", Path.of(destinationPath));
         if (success) {
-            MainFrame.getInstance().showNotification("Item decrypted successfully");
-            MainFrame.getInstance().addToRecentItems(targetItem);
-            MainFrame.getInstance().navigate(new StartRoute());
+            mainFrame.showNotification("Item decrypted successfully");
+            mainFrame.addToRecentItems(targetItem);
+            mainFrame.navigate(new StartRoute());
         } else {
-            MainFrame.getInstance().showNotification("Failed to decrypt the item");
+            mainFrame.showNotification("Failed to decrypt the item");
         }
     }
 
@@ -164,7 +160,7 @@ public class DecryptRoute extends Route {
 
         return switch (algorithm.toUpperCase()) {
             case "AES" -> new AesCryptoService();
-            case "BLOWFISH" -> null; // TODO: после реализации вернуть new BlowfishCryptoService();
+            case "BLOWFISH" ->  new BlowfishCryptoService();
             case "TWOFISH" -> new TwofishCryptoService();
             default -> null;
         };

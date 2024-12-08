@@ -5,15 +5,14 @@ import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
 import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
 import ru.obninsk.iate.easycipher.lib.enums.EncryptionAlgorithm;
+import ru.obninsk.iate.easycipher.lib.services.BlowfishCryptoService;
 import ru.obninsk.iate.easycipher.lib.services.UserInputHandler;
 import ru.obninsk.iate.easycipher.lib.services.AesCryptoService;
-//TODO: после реализации вернуть import ru.obninsk.iate.easycipher.lib.services.BlowfishCryptoService;
 import ru.obninsk.iate.easycipher.lib.services.TwofishCryptoService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.io.File;
 
 public class EncryptRoute extends Route {
@@ -123,23 +122,23 @@ public class EncryptRoute extends Route {
         var mainFrame = MainFrame.getInstance();
         String key = keygenPanelTextField.getText().trim();
         if (key.isEmpty()) {
-            MainFrame.getInstance().showNotification("The key cannot be empty.");
+            mainFrame.showNotification("The key cannot be empty.");
             return;
         }
         ICryptoService cryptoService = switch (selectedAlgorithm) {
             case AES -> new AesCryptoService();
-            case BLOWFISH -> null; //TODO: после реализации вернуть new BlowfishCryptoService();
+            case BLOWFISH ->  new BlowfishCryptoService();
             case TWOFISH -> new TwofishCryptoService();
         };
         Path targetPath = targetItem.toPath();
         UserInputHandler handler = new UserInputHandler(cryptoService, key, targetPath);
-        boolean success = handler.performOperation("encrypt");
+        boolean success = handler.performOperation("encrypt", Path.of(destinationPath));
         if (success) {
             mainFrame.showNotification("Item encrypted successfully");
             mainFrame.addToRecentItems(new File(destinationPath));
             mainFrame.navigate(new StartRoute());
         } else {
-            mainFrame.getInstance().showNotification("An error occurred while encrypting the element.");
+            mainFrame.showNotification("An error occurred while encrypting the element.");
         }
     }
 
