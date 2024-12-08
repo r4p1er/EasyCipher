@@ -22,10 +22,15 @@ public class EncryptRoute extends Route {
     private JLabel keygenPanelLabel;
     private JTextField keygenPanelTextField;
     private JButton keygenPanelGenerateButton;
+    private JPanel destinationPanel;
+    private JLabel destinationPanelLabel;
+    private JTextField destinationPanelTextField;
+    private JButton destinationPanelChooseButton;
     private JButton encryptButton;
     private JButton cancelButton;
 
     private final File targetItem;
+    private String destinationPath;
     private EncryptionAlgorithm selectedAlgorithm = EncryptionAlgorithm.AES;
     private static final String[] ALGORITHM_OPTIONS = { "AES", "Blowfish", "Twofish" };
     private static final String[] ALGORITHM_DESCRIPTIONS = {
@@ -37,11 +42,17 @@ public class EncryptRoute extends Route {
     public EncryptRoute(@NotNull File targetItem) {
         super("EasyCipher - " + targetItem.getName());
         this.targetItem = targetItem;
+        if (targetItem.isDirectory()) destinationPath = targetItem.getPath() + ".encd";
+        else destinationPath = targetItem.getPath() + ".enc";
+
+        destinationPanelTextField.setText(destinationPath);
         openedItemPanelInner.add(new OpenedItemLabel(targetItem));
         algorithmPanelDescription.setText(ALGORITHM_DESCRIPTIONS[0]);
         SwingUtilities.invokeLater(() -> algorithmPanelDescription.revalidate());
+
         algorithmPanelComboBox.addActionListener(this::handleAlgorithmPanelComboBoxAction);
         keygenPanelGenerateButton.addActionListener(this::handleKeygenPanelGenerateButtonAction);
+        destinationPanelChooseButton.addActionListener(this::handleDestinationPanelChooseButtonAction);
         encryptButton.addActionListener(this::handleEncryptButtonAction);
         cancelButton.addActionListener(this::handleCancelButtonAction);
     }
@@ -72,6 +83,33 @@ public class EncryptRoute extends Route {
 
     private void handleKeygenPanelGenerateButtonAction(ActionEvent event) {
         keygenPanelTextField.setText("Very secure and, of course, random key");
+    }
+
+    private void handleDestinationPanelChooseButtonAction(ActionEvent event) {
+        var fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setDialogTitle("Choose the filename to be created");
+        fileChooser.setApproveButtonText("Choose");
+        int chooserResult = fileChooser.showSaveDialog(contentPane);
+        if (chooserResult != JFileChooser.APPROVE_OPTION) return;
+
+        File selectedFile = fileChooser.getSelectedFile();
+        if (selectedFile.getPath().equals(targetItem.getPath())) {
+            JOptionPane.showMessageDialog(contentPane, "You cannot choose target file as the destination");
+            return;
+
+        } else if (selectedFile.exists()) {
+            int confirmationResult = JOptionPane.showConfirmDialog(
+                    contentPane,
+                    "The specified file already exists. Do you want to override it?",
+                    "Override",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if (confirmationResult == JOptionPane.NO_OPTION) return;
+        }
+
+        destinationPath = selectedFile.getPath();
+        destinationPanelTextField.setText(destinationPath);
     }
 
     private void handleEncryptButtonAction(ActionEvent event) {
