@@ -38,8 +38,7 @@ public class DecryptRoute extends Route {
     public DecryptRoute(@NotNull File targetItem) {
         super("EasyCipher - " + targetItem.getName());
         this.targetItem = targetItem;
-        if (targetItem.isDirectory()) destinationPath = targetItem.getPath() + ".decd";
-        else destinationPath = targetItem.getPath() + ".dec";
+        destinationPath = targetItem.getPath() + ".dec";
 
         destinationPanelTextField.setText(destinationPath);
         openedItemPanelInner.add(new OpenedItemLabel(targetItem));
