@@ -111,19 +111,17 @@ public class BlowfishCryptoService implements ICryptoService {
             var cipher = Cipher.getInstance(transformation, PROVIDER);
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
 
-            long dataSize = Files.size(filePath) - metadata.getBlockLength();
-            byte[] buffer = new byte[READ_BUFFER_SIZE];
+            byte[] buffer = new byte[4096];
             int bytesRead;
-            long totalDecryptedBytes = 0;
+            long totalBytesRead = 0, totalDecryptedBytes = 0, dataSize = Files.size(filePath) - metadata.getBlockLength();
 
-            while (totalDecryptedBytes < dataSize && (bytesRead = inputStream.read(buffer)) != -1) {
-                int bytesToProcess = (int) Math.min(bytesRead, dataSize - totalDecryptedBytes);
-                byte[] decryptedBytes = cipher.update(buffer, 0, bytesToProcess);
-                if (decryptedBytes != null) {
-                    messageDigest.update(decryptedBytes);
-                    outputStream.write(decryptedBytes);
-                    totalDecryptedBytes += decryptedBytes.length;
-                }
+            while (totalBytesRead < dataSize && (bytesRead = inputStream.read(buffer)) != -1) {
+                int bytesToProcess = (int) Math.min(bytesRead, dataSize - totalBytesRead);
+                byte[] decrypted = cipher.update(buffer, 0, bytesToProcess);
+                totalDecryptedBytes += decrypted.length;
+                messageDigest.update(decrypted);
+                outputStream.write(decrypted);
+                totalBytesRead += bytesToProcess;
             }
 
             byte[] finalBytes = cipher.doFinal();
