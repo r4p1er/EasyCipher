@@ -296,7 +296,7 @@
                           <iconTextGap value="12"/>
                           <inheritsPopupMenu value="true"/>
                           <labelFor value="b9051"/>
-                          <text value="Encrypted file path"/>
+                          <text value="Destination file path"/>
                         </properties>
                       </component>
                       <component id="633da" class="javax.swing.JButton" binding="destinationPanelChooseButton">
