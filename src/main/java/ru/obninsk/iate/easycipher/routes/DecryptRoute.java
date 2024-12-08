@@ -103,14 +103,7 @@ public class DecryptRoute extends Route {
         }
         Path targetPath = targetItem.toPath();
         UserInputHandler handler = new UserInputHandler(cryptoService, key, targetPath);
-        Path outputPath = null;
-        if (targetItem.isFile()) {
-            String originalName = removeExtension(targetItem.getName());
-            outputPath = Paths.get(targetItem.getParent(), originalName);
-        } else if (targetItem.isDirectory()) {
-            outputPath = Paths.get(targetItem.getParent(), targetItem.getName().replace("_enc", ""));
-        }
-        boolean success = handler.performOperation("decrypt", outputPath);
+        boolean success = handler.performOperation("decrypt");
         if (success) {
             MainFrame.getInstance().showNotification("Item decrypted successfully");
             MainFrame.getInstance().addToRecentItems(targetItem);

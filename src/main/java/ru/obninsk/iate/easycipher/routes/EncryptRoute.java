@@ -94,13 +94,7 @@ public class EncryptRoute extends Route {
         };
         Path targetPath = targetItem.toPath();
         UserInputHandler handler = new UserInputHandler(cryptoService, key, targetPath);
-        Path outputPath = null;
-        if (targetItem.isFile()) {
-            outputPath = Paths.get(targetItem.getParent(), targetItem.getName() + ".enc");
-        } else if (targetItem.isDirectory()) {
-            outputPath = Paths.get(targetItem.getParent(), targetItem.getName() + "_enc");
-        }
-        boolean success = handler.performOperation("encrypt", outputPath);
+        boolean success = handler.performOperation("encrypt");
         if (success) {
             MainFrame.getInstance().showNotification("Item encrypted successfully");
             MainFrame.getInstance().addToRecentItems(targetItem);

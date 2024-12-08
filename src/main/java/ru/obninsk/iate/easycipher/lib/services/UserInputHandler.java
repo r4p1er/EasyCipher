@@ -40,6 +40,29 @@ public class UserInputHandler {
         }
     }
 
+    public boolean performOperation(String operation) {
+        try {
+            switch (operation.toLowerCase()) {
+                case "encrypt":
+                    if (objectPath.toFile().isDirectory()) {
+                        return cryptoService.encryptDirectory(objectPath, key);
+                    } else {
+                        return cryptoService.encryptFile(objectPath, key);
+                    }
+                case "decrypt":
+                    if (objectPath.toFile().isDirectory()) {
+                        return cryptoService.decryptDirectory(objectPath, key);
+                    } else {
+                        return cryptoService.decryptFile(objectPath, key);
+                    }
+                default:
+                    throw new IllegalArgumentException("Invalid operation type: " + operation);
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public static String generateRandomKey() {
         SecureRandom secureRandom = new SecureRandom();
         byte[] keyBytes = new byte[32];
