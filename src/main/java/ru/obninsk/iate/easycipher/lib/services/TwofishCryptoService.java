@@ -114,19 +114,17 @@ public class TwofishCryptoService implements ICryptoService {
             Cipher cipher = Cipher.getInstance(transformation, "BC");
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
 
-            long dataSize = Files.size(filePath) - metadata.getBlockLength();
             byte[] buffer = new byte[4096];
             int bytesRead;
-            long totalDecryptedBytes = 0;
+            long totalBytesRead = 0, totalDecryptedBytes = 0, dataSize = Files.size(filePath) - metadata.getBlockLength();
 
-            while (totalDecryptedBytes < dataSize && (bytesRead = inputStream.read(buffer)) != -1) {
-                int bytesToProcess = (int) Math.min(bytesRead, dataSize - totalDecryptedBytes);
+            while (totalBytesRead < dataSize && (bytesRead = inputStream.read(buffer)) != -1) {
+                int bytesToProcess = (int) Math.min(bytesRead, dataSize - totalBytesRead);
                 byte[] decrypted = cipher.update(buffer, 0, bytesToProcess);
-                if (decrypted != null) {
-                    messageDigest.update(decrypted);
-                    outputStream.write(decrypted);
-                    totalDecryptedBytes += decrypted.length;
-                }
+                totalDecryptedBytes += decrypted.length;
+                messageDigest.update(decrypted);
+                outputStream.write(decrypted);
+                totalBytesRead += bytesToProcess;
             }
 
             byte[] finalBytes = cipher.doFinal();

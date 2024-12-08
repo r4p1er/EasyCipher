@@ -3,9 +3,16 @@ package ru.obninsk.iate.easycipher.routes;
 import org.jetbrains.annotations.*;
 import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
+import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
 import ru.obninsk.iate.easycipher.lib.enums.EncryptionAlgorithm;
+import ru.obninsk.iate.easycipher.lib.services.BlowfishCryptoService;
+import ru.obninsk.iate.easycipher.lib.services.UserInputHandler;
+import ru.obninsk.iate.easycipher.lib.services.AesCryptoService;
+import ru.obninsk.iate.easycipher.lib.services.TwofishCryptoService;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.nio.file.Path;
 import java.io.File;
 
 public class EncryptRoute extends Route {
@@ -70,19 +77,18 @@ public class EncryptRoute extends Route {
 
     private void handleAlgorithmPanelComboBoxAction(ActionEvent event) {
         int selectedIndex = algorithmPanelComboBox.getSelectedIndex();
-
         switch (selectedIndex) {
             case 0 -> selectedAlgorithm = EncryptionAlgorithm.AES;
             case 1 -> selectedAlgorithm = EncryptionAlgorithm.BLOWFISH;
             default -> selectedAlgorithm = EncryptionAlgorithm.TWOFISH;
         }
-
         algorithmPanelDescription.setText(ALGORITHM_DESCRIPTIONS[selectedIndex]);
         SwingUtilities.invokeLater(() -> algorithmPanelDescription.revalidate());
     }
 
     private void handleKeygenPanelGenerateButtonAction(ActionEvent event) {
-        keygenPanelTextField.setText("Very secure and, of course, random key");
+        String key = UserInputHandler.generateRandomKey();
+        keygenPanelTextField.setText(key);
     }
 
     private void handleDestinationPanelChooseButtonAction(ActionEvent event) {
@@ -114,9 +120,26 @@ public class EncryptRoute extends Route {
 
     private void handleEncryptButtonAction(ActionEvent event) {
         var mainFrame = MainFrame.getInstance();
-        mainFrame.showNotification("Item encrypted successfully");
-        mainFrame.addToRecentItems(new File(destinationPath));
-        mainFrame.navigate(new StartRoute());
+        String key = keygenPanelTextField.getText().trim();
+        if (key.isEmpty()) {
+            mainFrame.showNotification("The key cannot be empty.");
+            return;
+        }
+        ICryptoService cryptoService = switch (selectedAlgorithm) {
+            case AES -> new AesCryptoService();
+            case BLOWFISH ->  new BlowfishCryptoService();
+            case TWOFISH -> new TwofishCryptoService();
+        };
+        Path targetPath = targetItem.toPath();
+        UserInputHandler handler = new UserInputHandler(cryptoService, key, targetPath);
+        boolean success = handler.performOperation("encrypt", Path.of(destinationPath));
+        if (success) {
+            mainFrame.showNotification("Item encrypted successfully");
+            mainFrame.addToRecentItems(new File(destinationPath));
+            mainFrame.navigate(new StartRoute());
+        } else {
+            mainFrame.showNotification("An error occurred while encrypting the element.");
+        }
     }
 
     private void handleCancelButtonAction(ActionEvent event) {
