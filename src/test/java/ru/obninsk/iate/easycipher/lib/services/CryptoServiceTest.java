@@ -1,18 +1,30 @@
 package ru.obninsk.iate.easycipher.lib.services;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.FieldSource;
+import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Stream;
 
-public class AesCryptoServiceTest {
+public class CryptoServiceTest {
 
-    private final AesCryptoService cryptoService = new AesCryptoService();
+    private static final List<ICryptoService> cryptoServices = Arrays.asList(
+            new AesCryptoService(),
+            new BlowfishCryptoService(),
+            new TwofishCryptoService()
+    );
+
     private Path originalFile;
     private Path encryptedFile;
     private Path decryptedFile;
@@ -74,8 +86,9 @@ public class AesCryptoServiceTest {
         }
     }
 
-    @Test
-    public void testEncryptAndDecryptFile() throws Exception {
+    @ParameterizedTest
+    @FieldSource("cryptoServices")
+    public void testEncryptAndDecryptFile(@NotNull ICryptoService cryptoService) throws Exception {
         String key = "MySecretKey1234567890";
         boolean encryptSuccess = cryptoService.encryptFile(originalFile, key, encryptedFile);
         assertTrue(encryptSuccess, "Шифрование файла должно пройти успешно");
@@ -92,10 +105,12 @@ public class AesCryptoServiceTest {
         System.out.println("Начальное содержимое файла: " + originalContent);
         System.out.println("Зашифрованное содержимое файла (Base64): " + encryptedBase64);
         System.out.println("Расшифрованное содержимое файла: " + decryptedContent);
+        System.out.println();
     }
 
-    @Test
-    public void testEncryptAndDecryptDirectory() throws Exception {
+    @ParameterizedTest
+    @FieldSource("cryptoServices")
+    public void testEncryptAndDecryptDirectory(@NotNull ICryptoService cryptoService) throws Exception {
         String key = "MySecretKey1234567890";
 
         Path originalFile1 = originalDir.resolve("file1.txt");
@@ -125,12 +140,12 @@ public class AesCryptoServiceTest {
                 decryptedContent2,
                 "Содержимое file2.txt должно совпадать после дешифрования");
 
-        System.out.println();
         System.out.println("Содержимое файлов в директории до шифрования:");
         System.out.println("file1.txt: " + originalContent1);
         System.out.println("file2.txt: " + originalContent2);
         System.out.println("Содержимое файлов в директории после дешифрования:");
         System.out.println("file1.txt: " + decryptedContent1);
         System.out.println("file2.txt: " + decryptedContent2);
+        System.out.println();
     }
 }
