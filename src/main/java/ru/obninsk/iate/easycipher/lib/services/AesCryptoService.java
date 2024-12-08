@@ -1,6 +1,7 @@
 package ru.obninsk.iate.easycipher.lib.services;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.jetbrains.annotations.NotNull;
 import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
 import ru.obninsk.iate.easycipher.lib.abstractions.IMetadataBlockService;
 import ru.obninsk.iate.easycipher.lib.utils.ZipUtility;
@@ -24,7 +25,7 @@ public class AesCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean encryptFile(Path filePath, String key, Path out) {
+    public boolean encryptFile(@NotNull Path filePath, String key, @NotNull Path out) {
         boolean error = false;
 
         try (var inputStream = new BufferedInputStream(Files.newInputStream(filePath));
@@ -77,14 +78,7 @@ public class AesCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean encryptFile(Path filePath, String key) {
-        var newFileName = filePath.getFileName().toString() + ".enc";
-
-        return encryptFile(filePath, key, filePath.resolveSibling(newFileName));
-    }
-
-    @Override
-    public boolean decryptFile(Path filePath, String key, Path out) {
+    public boolean decryptFile(@NotNull Path filePath, String key, @NotNull Path out) {
         boolean error = false;
 
         try (var inputStream = new BufferedInputStream(Files.newInputStream(filePath));
@@ -133,14 +127,7 @@ public class AesCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean decryptFile(Path filePath, String key) {
-        var newFileName = filePath.getFileName().toString() + ".dec";
-
-        return decryptFile(filePath, key, filePath.resolveSibling(newFileName));
-    }
-
-    @Override
-    public boolean encryptDirectory(Path dirPath, String key, Path out) {
+    public boolean encryptDirectory(@NotNull Path dirPath, String key, @NotNull Path out) {
         boolean error = false;
         Path tempZip = null;
 
@@ -148,7 +135,7 @@ public class AesCryptoService implements ICryptoService {
             tempZip = Files.createTempFile("temp-", ".zip");
             if (!ZipUtility.createZip(dirPath, tempZip)) throw new IOException();
             if (!encryptFile(tempZip, key, out)) throw new IOException();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
             error = true;
         } finally {
             try {
@@ -160,14 +147,7 @@ public class AesCryptoService implements ICryptoService {
     }
 
     @Override
-    public boolean encryptDirectory(Path dirPath, String key) {
-        var newFileName = dirPath.getFileName().toString() + ".encd";
-
-        return encryptDirectory(dirPath, key, dirPath.resolveSibling(newFileName));
-    }
-
-    @Override
-    public boolean decryptDirectory(Path encdPath, String key, Path outDir) {
+    public boolean decryptDirectory(@NotNull Path encdPath, String key, @NotNull Path outDir) {
         boolean error = false;
         Path tempZip = null;
 
@@ -175,7 +155,7 @@ public class AesCryptoService implements ICryptoService {
             tempZip = Files.createTempFile("temp-", ".zip");
             if (!decryptFile(encdPath, key, tempZip)) throw new IOException();
             if (!ZipUtility.extractZip(tempZip, outDir)) throw new IOException();
-        } catch (Exception ignored) {
+        } catch (Exception e) {
             error = true;
         } finally {
             try {
