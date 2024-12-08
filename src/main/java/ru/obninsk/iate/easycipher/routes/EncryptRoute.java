@@ -115,7 +115,7 @@ public class EncryptRoute extends Route {
     private void handleEncryptButtonAction(ActionEvent event) {
         var mainFrame = MainFrame.getInstance();
         mainFrame.showNotification("Item encrypted successfully");
-        mainFrame.addToRecentItems(targetItem);
+        mainFrame.addToRecentItems(new File(destinationPath));
         mainFrame.navigate(new StartRoute());
     }
 
