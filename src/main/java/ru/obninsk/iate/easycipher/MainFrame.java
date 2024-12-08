@@ -31,6 +31,7 @@ public class MainFrame extends JFrame {
         mainContainer.removeAll();
         mainContainer.add(destinationRoute.getContentPane());
         mainContainer.revalidate();
+        SwingUtilities.invokeLater(() -> notificationContainer.revalidate());
     }
 
     public void showNotification(@NotNull String message) {
