@@ -98,6 +98,7 @@ public class AesCryptoService implements ICryptoService {
             byte[] buffer = new byte[4096];
             int bytesRead;
             long totalBytesRead = 0, totalDecryptedBytes = 0, dataSize = Files.size(filePath) - metadata.getBlockLength();
+
             while (totalBytesRead < dataSize && (bytesRead = inputStream.read(buffer)) != -1) {
                 int bytesToProcess = (int) Math.min(bytesRead, dataSize - totalBytesRead);
                 byte[] decrypted = cipher.update(buffer, 0, bytesToProcess);
@@ -110,8 +111,8 @@ public class AesCryptoService implements ICryptoService {
             byte[] finalBytes = cipher.doFinal();
             if (finalBytes.length > 0) {
                 messageDigest.update(finalBytes);
-                totalDecryptedBytes += finalBytes.length;
                 outputStream.write(finalBytes);
+                totalDecryptedBytes += finalBytes.length;
             }
 
             if (!Arrays.equals(metadata.getDataHash(), messageDigest.digest()) || metadata.getDataLength() != totalDecryptedBytes) throw new IOException();
