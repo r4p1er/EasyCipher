@@ -3,7 +3,6 @@ package ru.obninsk.iate.easycipher.routes;
 import org.jetbrains.annotations.*;
 import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
-import ru.obninsk.iate.easycipher.lib.enums.Algorithm;
 import ru.obninsk.iate.easycipher.lib.utils.LocalizationUtility;
 
 import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
@@ -17,8 +16,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.nio.file.Path;
 import java.io.File;
-import java.security.SecureRandom;
-import java.util.Base64;
 
 public class EncryptRoute extends Route {
     private JPanel contentPane;
@@ -69,13 +66,6 @@ public class EncryptRoute extends Route {
         cancelButton.addActionListener(this::handleCancelButtonAction);
     }
 
-    public static String generateSecureKey(int byteLength) {
-        SecureRandom secureRandom = new SecureRandom();
-        byte[] keyBytes = new byte[byteLength];
-        secureRandom.nextBytes(keyBytes);
-        return Base64.getEncoder().encodeToString(keyBytes);
-    }
-
     @Override
     public JPanel getContentPane() {
         return contentPane;
@@ -99,9 +89,6 @@ public class EncryptRoute extends Route {
     }
 
     private void handleKeygenPanelGenerateButtonAction(ActionEvent event) {
-        int keySizeBytes = 32;
-        String key = generateSecureKey(keySizeBytes);
-        keygenPanelTextField.setText(key);
         String key = UserInputHandler.generateRandomKey();
         keygenPanelTextField.setText(key);
     }
@@ -116,14 +103,15 @@ public class EncryptRoute extends Route {
 
         File selectedFile = fileChooser.getSelectedFile();
         if (selectedFile.getPath().equals(targetItem.getPath())) {
-            JOptionPane.showMessageDialog(contentPane, "You cannot choose target file as the destination");
+            JOptionPane.showMessageDialog(contentPane,
+                    LocalizationUtility.getLocalizedString("dialog.cannot.choose.target.as.destination"));
             return;
 
         } else if (selectedFile.exists()) {
             int confirmationResult = JOptionPane.showConfirmDialog(
                     contentPane,
-                    "The specified file already exists. Do you want to override it?",
-                    "Override",
+                    LocalizationUtility.getLocalizedString("dialog.file.already.exists"),
+                    LocalizationUtility.getLocalizedString("title.override.file"),
                     JOptionPane.YES_NO_OPTION
             );
             if (confirmationResult == JOptionPane.NO_OPTION) return;
@@ -140,7 +128,7 @@ public class EncryptRoute extends Route {
         mainFrame.navigate(new StartRoute());
         String key = keygenPanelTextField.getText().trim();
         if (key.isEmpty()) {
-            mainFrame.showNotification("The key cannot be empty.");
+            mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.key.cannot.be.empty"));
             return;
         }
         ICryptoService cryptoService = switch (selectedAlgorithm) {
@@ -152,11 +140,11 @@ public class EncryptRoute extends Route {
         UserInputHandler handler = new UserInputHandler(cryptoService, key, targetPath);
         boolean success = handler.performOperation("encrypt", Path.of(destinationPath));
         if (success) {
-            mainFrame.showNotification("Item encrypted successfully");
+            mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.item.encrypted"));
             mainFrame.addToRecentItems(new File(destinationPath));
             mainFrame.navigate(new StartRoute());
         } else {
-            mainFrame.showNotification("An error occurred while encrypting the element.");
+            mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.failed.to.encrypt"));
         }
     }
 

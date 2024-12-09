@@ -58,12 +58,9 @@ public class StartRoute extends Route {
     }
 
     private void handleChooserPanelButtonAction(ActionEvent event) {
-        var fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        fileChooser.setDialogTitle(LocalizationUtility.getLocalizedString("dialog.choose.to.encrypt"));
-        fileChooser.setApproveButtonText(LocalizationUtility.getLocalizedString("button.choose"));
-        int result = fileChooser.showOpenDialog(contentPane);
-        if (result != JFileChooser.APPROVE_OPTION) return;
+        var fileChooser = getFileChooser();
+        if (fileChooser == null)
+            return;
 
         File selectedItem = fileChooser.getSelectedFile();
         var encryptRoute = new EncryptRoute(selectedItem);
@@ -71,15 +68,24 @@ public class StartRoute extends Route {
     }
 
     private void handleRecentItemsPanelButtonAction(ActionEvent event) {
+        var fileChooser = getFileChooser();
+        if (fileChooser == null)
+            return;
+
+        File selectedItem = fileChooser.getSelectedFile();
+        var decryptRoute = new DecryptRoute(selectedItem);
+        MainFrame.getInstance().navigate(decryptRoute);
+    }
+
+    private JFileChooser getFileChooser() {
         var fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         fileChooser.setDialogTitle(LocalizationUtility.getLocalizedString("dialog.choose.to.encrypt"));
         fileChooser.setApproveButtonText(LocalizationUtility.getLocalizedString("button.choose"));
         int result = fileChooser.showOpenDialog(contentPane);
-        if (result != JFileChooser.APPROVE_OPTION) return;
+        if (result != JFileChooser.APPROVE_OPTION)
+            return null;
 
-        File selectedItem = fileChooser.getSelectedFile();
-        var decryptRoute = new DecryptRoute(selectedItem);
-        MainFrame.getInstance().navigate(decryptRoute);
+        return fileChooser;
     }
 }
