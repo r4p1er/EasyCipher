@@ -3,9 +3,11 @@ package ru.obninsk.iate.easycipher.routes;
 import org.jetbrains.annotations.*;
 import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
+import ru.obninsk.iate.easycipher.lib.enums.EncryptionAlgorithm;
+import ru.obninsk.iate.easycipher.lib.utils.LocalizationUtility;
+
 import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
 import ru.obninsk.iate.easycipher.lib.abstractions.IMetadataBlockService;
-import ru.obninsk.iate.easycipher.lib.enums.EncryptionAlgorithm;
 import ru.obninsk.iate.easycipher.lib.services.*;
 
 import javax.swing.*;
@@ -89,21 +91,22 @@ public class DecryptRoute extends Route {
     private void handleDestinationPanelChooseButtonAction(ActionEvent event) {
         var fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setDialogTitle("Choose the path to be created");
-        fileChooser.setApproveButtonText("Choose");
+        fileChooser.setDialogTitle(LocalizationUtility.getLocalizedString("dialog.choose.create.destination"));
+        fileChooser.setApproveButtonText(LocalizationUtility.getLocalizedString("button.choose"));
         int chooserResult = fileChooser.showSaveDialog(contentPane);
         if (chooserResult != JFileChooser.APPROVE_OPTION) return;
 
         File selectedFile = fileChooser.getSelectedFile();
         if (selectedFile.getPath().equals(targetItem.getPath())) {
-            JOptionPane.showMessageDialog(contentPane, "You cannot choose target file as the destination");
+            JOptionPane.showMessageDialog(contentPane,
+                    LocalizationUtility.getLocalizedString("dialog.cannot.choose.target.as.destination"));
             return;
 
         } else if (selectedFile.exists()) {
             int confirmationResult = JOptionPane.showConfirmDialog(
                     contentPane,
-                    "The specified file already exists. Do you want to override it?",
-                    "Override the file?",
+                    LocalizationUtility.getLocalizedString("dialog.file.already.exists"),
+                    LocalizationUtility.getLocalizedString("title.override.file"),
                     JOptionPane.YES_NO_OPTION
             );
             if (confirmationResult == JOptionPane.NO_OPTION) return;
@@ -117,7 +120,7 @@ public class DecryptRoute extends Route {
         var mainFrame = MainFrame.getInstance();
         String key = keyPanelTextField.getText().trim();
         if (key.isEmpty()) {
-            mainFrame.showNotification("The key cannot be empty.");
+            mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.key.cannot.be.empty"));
             return;
         }
 
@@ -126,19 +129,22 @@ public class DecryptRoute extends Route {
             IMetadataBlockService metadataService = new MetadataBlockService();
             boolean metadataRead = metadataService.read(targetItem.toPath());
             if (!metadataRead) {
-                mainFrame.showNotification("Failed to read metadata from the file.");
+                mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.metadata.read.error"));
                 return;
             }
 
             String actualAlgorithm = metadataService.getAlgorithm();
             if (actualAlgorithm == null || actualAlgorithm.isEmpty()) {
-                mainFrame.showNotification("No algorithm found in metadata.");
+                mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.invalid.metadata"));
                 return;
             }
 
             if (!actualAlgorithm.equalsIgnoreCase(selectedAlgorithm.name())) {
-                mainFrame.showNotification("Selected file was encrypted using " + actualAlgorithm +
-                                ", but you selected: " + selectedAlgorithm.name()
+                mainFrame.showNotification(
+                        LocalizationUtility.getLocalizedString("notification.selected.file.was.encrypted.using") +
+                                " " + actualAlgorithm +
+                                LocalizationUtility.getLocalizedString("notification.but.you.selected") + " " +
+                                selectedAlgorithm.name()
                 );
                 return;
             }
@@ -151,7 +157,8 @@ public class DecryptRoute extends Route {
         } else {
             cryptoService = detectCryptoService(targetItem.toPath());
             if (cryptoService == null) {
-                mainFrame.showNotification("Failed to detect the encryption algorithm.");
+                mainFrame.showNotification(
+                        LocalizationUtility.getLocalizedString("notification.failed.to.detect.algorithm"));
                 return;
             }
         }
@@ -160,11 +167,11 @@ public class DecryptRoute extends Route {
         UserInputHandler handler = new UserInputHandler(cryptoService, key, targetPath);
         boolean success = handler.performOperation("decrypt", Path.of(destinationPath));
         if (success) {
-            mainFrame.showNotification("Item decrypted successfully");
+            mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.item.decrypted"));
             mainFrame.addToRecentItems(targetItem);
             mainFrame.navigate(new StartRoute());
         } else {
-            mainFrame.showNotification("Failed to decrypt the item");
+            mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.failed.to.decrypt"));
         }
     }
 

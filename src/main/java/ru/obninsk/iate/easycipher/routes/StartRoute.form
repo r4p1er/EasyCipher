@@ -48,7 +48,7 @@
                   <opaque value="false"/>
                   <selectedTextColor color="-8881022"/>
                   <selectionColor color="-8881022"/>
-                  <text value="Protect your files with EasyCipher"/>
+                  <text resource-bundle="locales/MessagesBundle" key="label.protect.your.files.with.easycipher"/>
                 </properties>
               </component>
               <vspacer id="cbcae">
@@ -78,7 +78,7 @@
                     </constraints>
                     <properties>
                       <font/>
-                      <text value="Choose a file or directory to encrypt"/>
+                      <text resource-bundle="locales/MessagesBundle" key="dialog.choose.to.encrypt"/>
                     </properties>
                   </component>
                   <vspacer id="9122e">
@@ -111,7 +111,7 @@
                       <defaultCapable value="true"/>
                       <focusPainted value="true"/>
                       <opaque value="false"/>
-                      <text value="Choose an item..."/>
+                      <text resource-bundle="locales/MessagesBundle" key="button.choose.an.item"/>
                     </properties>
                   </component>
                 </children>
@@ -170,7 +170,7 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <text value="Decrypt another item..."/>
+                      <text resource-bundle="locales/MessagesBundle" key="button.decrypt.another.item"/>
                     </properties>
                   </component>
                 </children>

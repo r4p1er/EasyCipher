@@ -2,6 +2,8 @@ package ru.obninsk.iate.easycipher.routes;
 
 import ru.obninsk.iate.easycipher.*;
 import ru.obninsk.iate.easycipher.components.RecentItemButton;
+import ru.obninsk.iate.easycipher.lib.utils.LocalizationUtility;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -44,7 +46,9 @@ public class StartRoute extends Route {
         var recentItems = MainFrame.getInstance().getRecentItems();
 
         if (recentItems.isEmpty()) {
-            var label = new JLabel("No recent items", SwingConstants.CENTER);
+            var label = new JLabel(
+                    LocalizationUtility.getLocalizedString("label.no.recent.items"),
+                    SwingConstants.CENTER);
             label.setMinimumSize(new Dimension(-1, 30));
             recentItemsPanel.add(label);
         } else for (File item : recentItems) {
@@ -54,12 +58,9 @@ public class StartRoute extends Route {
     }
 
     private void handleChooserPanelButtonAction(ActionEvent event) {
-        var fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        fileChooser.setDialogTitle("Choose a file or directory to encrypt");
-        fileChooser.setApproveButtonText("Choose");
-        int result = fileChooser.showOpenDialog(contentPane);
-        if (result != JFileChooser.APPROVE_OPTION) return;
+        var fileChooser = getFileChooser();
+        if (fileChooser == null)
+            return;
 
         File selectedItem = fileChooser.getSelectedFile();
         var encryptRoute = new EncryptRoute(selectedItem);
@@ -67,15 +68,24 @@ public class StartRoute extends Route {
     }
 
     private void handleRecentItemsPanelButtonAction(ActionEvent event) {
-        var fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        fileChooser.setDialogTitle("Choose a file or directory to decrypt");
-        fileChooser.setApproveButtonText("Choose");
-        int result = fileChooser.showOpenDialog(contentPane);
-        if (result != JFileChooser.APPROVE_OPTION) return;
+        var fileChooser = getFileChooser();
+        if (fileChooser == null)
+            return;
 
         File selectedItem = fileChooser.getSelectedFile();
         var decryptRoute = new DecryptRoute(selectedItem);
         MainFrame.getInstance().navigate(decryptRoute);
+    }
+
+    private JFileChooser getFileChooser() {
+        var fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        fileChooser.setDialogTitle(LocalizationUtility.getLocalizedString("dialog.choose.to.encrypt"));
+        fileChooser.setApproveButtonText(LocalizationUtility.getLocalizedString("button.choose"));
+        int result = fileChooser.showOpenDialog(contentPane);
+        if (result != JFileChooser.APPROVE_OPTION)
+            return null;
+
+        return fileChooser;
     }
 }

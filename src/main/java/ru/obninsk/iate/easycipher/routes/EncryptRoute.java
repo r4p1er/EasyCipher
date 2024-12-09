@@ -3,6 +3,8 @@ package ru.obninsk.iate.easycipher.routes;
 import org.jetbrains.annotations.*;
 import ru.obninsk.iate.easycipher.MainFrame;
 import ru.obninsk.iate.easycipher.components.OpenedItemLabel;
+import ru.obninsk.iate.easycipher.lib.utils.LocalizationUtility;
+
 import ru.obninsk.iate.easycipher.lib.abstractions.ICryptoService;
 import ru.obninsk.iate.easycipher.lib.enums.EncryptionAlgorithm;
 import ru.obninsk.iate.easycipher.lib.services.BlowfishCryptoService;
@@ -41,9 +43,9 @@ public class EncryptRoute extends Route {
     private EncryptionAlgorithm selectedAlgorithm = EncryptionAlgorithm.AES;
     private static final String[] ALGORITHM_OPTIONS = { "AES", "Blowfish", "Twofish" };
     private static final String[] ALGORITHM_DESCRIPTIONS = {
-            "AES Description, AES Description, AES Description, AES Description, AES Description.",
-            "Blowfish Description, Blowfish Description, Blowfish Description, Blowfish Description.",
-            "Twofish Description, Twofish Description, Twofish Description, Twofish Description.",
+            LocalizationUtility.getLocalizedString("label.aes.description"),
+            LocalizationUtility.getLocalizedString("label.blowfish.description"),
+            LocalizationUtility.getLocalizedString("label.twofish.description")
     };
 
     public EncryptRoute(@NotNull File targetItem) {
@@ -101,14 +103,15 @@ public class EncryptRoute extends Route {
 
         File selectedFile = fileChooser.getSelectedFile();
         if (selectedFile.getPath().equals(targetItem.getPath())) {
-            JOptionPane.showMessageDialog(contentPane, "You cannot choose target file as the destination");
+            JOptionPane.showMessageDialog(contentPane,
+                    LocalizationUtility.getLocalizedString("dialog.cannot.choose.target.as.destination"));
             return;
 
         } else if (selectedFile.exists()) {
             int confirmationResult = JOptionPane.showConfirmDialog(
                     contentPane,
-                    "The specified file already exists. Do you want to override it?",
-                    "Override",
+                    LocalizationUtility.getLocalizedString("dialog.file.already.exists"),
+                    LocalizationUtility.getLocalizedString("title.override.file"),
                     JOptionPane.YES_NO_OPTION
             );
             if (confirmationResult == JOptionPane.NO_OPTION) return;
@@ -122,7 +125,7 @@ public class EncryptRoute extends Route {
         var mainFrame = MainFrame.getInstance();
         String key = keygenPanelTextField.getText().trim();
         if (key.isEmpty()) {
-            mainFrame.showNotification("The key cannot be empty.");
+            mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.key.cannot.be.empty"));
             return;
         }
         ICryptoService cryptoService = switch (selectedAlgorithm) {
@@ -134,11 +137,11 @@ public class EncryptRoute extends Route {
         UserInputHandler handler = new UserInputHandler(cryptoService, key, targetPath);
         boolean success = handler.performOperation("encrypt", Path.of(destinationPath));
         if (success) {
-            mainFrame.showNotification("Item encrypted successfully");
+            mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.item.encrypted"));
             mainFrame.addToRecentItems(new File(destinationPath));
             mainFrame.navigate(new StartRoute());
         } else {
-            mainFrame.showNotification("An error occurred while encrypting the element.");
+            mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.failed.to.encrypt"));
         }
     }
 

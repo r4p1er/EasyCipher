@@ -1,6 +1,8 @@
 package ru.obninsk.iate.easycipher;
 
 import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
+import ru.obninsk.iate.easycipher.lib.utils.LocalizationUtility;
+
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
@@ -11,6 +13,8 @@ public class Main {
     private final static Dimension MINIMUM_DIMENSION = new Dimension(550, 450);
 
     public static void main(String[] args) {
+        LocalizationUtility.setLocale();
+
         FlatOneDarkIJTheme.setup();
         maybeSetDefaultFont();
 
