@@ -123,9 +123,6 @@ public class EncryptRoute extends Route {
 
     private void handleEncryptButtonAction(ActionEvent event) {
         var mainFrame = MainFrame.getInstance();
-        mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.item.encrypted"));
-        mainFrame.addToRecentItems(targetItem);
-        mainFrame.navigate(new StartRoute());
         String key = keygenPanelTextField.getText().trim();
         if (key.isEmpty()) {
             mainFrame.showNotification(LocalizationUtility.getLocalizedString("notification.key.cannot.be.empty"));
