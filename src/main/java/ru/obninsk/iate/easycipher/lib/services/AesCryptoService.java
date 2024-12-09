@@ -49,7 +49,7 @@ public class AesCryptoService implements ICryptoService {
                 totalRead += bytesRead;
                 messageDigest.update(buffer, 0, bytesRead);
                 byte[] encrypted = cipher.update(buffer, 0, bytesRead);
-                outputStream.write(encrypted);
+                if (encrypted != null) outputStream.write(encrypted);
             }
 
             byte[] finalBytes = cipher.doFinal();
