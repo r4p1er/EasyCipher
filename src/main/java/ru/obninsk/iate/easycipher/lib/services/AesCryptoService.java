@@ -53,7 +53,7 @@ public class AesCryptoService implements ICryptoService {
             }
 
             byte[] finalBytes = cipher.doFinal();
-            if (finalBytes.length > 0) {
+            if (finalBytes != null && finalBytes.length > 0) {
                 outputStream.write(finalBytes);
             }
 
@@ -109,7 +109,7 @@ public class AesCryptoService implements ICryptoService {
             }
 
             byte[] finalBytes = cipher.doFinal();
-            if (finalBytes.length > 0) {
+            if (finalBytes != null && finalBytes.length > 0) {
                 messageDigest.update(finalBytes);
                 outputStream.write(finalBytes);
                 totalDecryptedBytes += finalBytes.length;
