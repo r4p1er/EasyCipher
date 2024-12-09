@@ -9,7 +9,7 @@ import java.awt.*;
 import java.io.InputStream;
 
 public class Main {
-    private final static Dimension INITIAL_DIMENSION = new Dimension(600, 600);
+    private final static Dimension INITIAL_DIMENSION = new Dimension(610, 610);
     private final static Dimension MINIMUM_DIMENSION = new Dimension(550, 450);
 
     public static void main(String[] args) {

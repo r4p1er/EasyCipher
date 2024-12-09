@@ -1,5 +1,7 @@
 package ru.obninsk.iate.easycipher.lib.services;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import ru.obninsk.iate.easycipher.lib.abstractions.IMetadataBlockService;
 
 import java.io.OutputStream;
@@ -158,7 +160,8 @@ public class MetadataBlockService implements IMetadataBlockService  {
         _dataHash = dataHash;
     }
 
-    private String trimNullBytes(byte[] data) {
+    @Contract(value = "_ -> new", pure = true)
+    private @NotNull String trimNullBytes(byte[] data) {
         int length = 0;
         while (length < data.length && data[length] != 0) {
             ++length;
@@ -167,7 +170,7 @@ public class MetadataBlockService implements IMetadataBlockService  {
         return new String(data, 0, length, StandardCharsets.UTF_8);
     }
 
-    private byte[] padNullBytes(String input) {
+    private byte @NotNull [] padNullBytes(@NotNull String input) {
         byte[] result = new byte[16];
         byte[] inputBytes = input.getBytes(StandardCharsets.UTF_8);
         int length = Math.min(inputBytes.length, 16);
@@ -187,7 +190,8 @@ public class MetadataBlockService implements IMetadataBlockService  {
                 ((long) (bytes[6] & 0xFF) << 8) | ((long) (bytes[7] & 0xFF));
     }
 
-    private byte[] longToBytes(long value) {
+    @Contract(pure = true)
+    private byte @NotNull [] longToBytes(long value) {
         byte[] bytes = new byte[8];
         bytes[0] = (byte) (value >> 56);
         bytes[1] = (byte) (value >> 48);
