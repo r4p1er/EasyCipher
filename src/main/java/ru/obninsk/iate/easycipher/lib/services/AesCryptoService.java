@@ -102,9 +102,11 @@ public class AesCryptoService implements ICryptoService {
             while (totalBytesRead < dataSize && (bytesRead = inputStream.read(buffer)) != -1) {
                 int bytesToProcess = (int) Math.min(bytesRead, dataSize - totalBytesRead);
                 byte[] decrypted = cipher.update(buffer, 0, bytesToProcess);
-                totalDecryptedBytes += decrypted.length;
-                messageDigest.update(decrypted);
-                outputStream.write(decrypted);
+                if (decrypted != null) {
+                    totalDecryptedBytes += decrypted.length;
+                    messageDigest.update(decrypted);
+                    outputStream.write(decrypted);
+                }
                 totalBytesRead += bytesToProcess;
             }
 
